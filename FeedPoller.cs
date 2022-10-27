@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Altinn.ApiClients.Maskinporten.Config;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using oed_feedpoller.Exceptions;
