@@ -1,7 +1,6 @@
 using Microsoft.Extensions.Hosting;
 using Altinn.ApiClients.Maskinporten.Services;
 using Altinn.ApiClients.Maskinporten.Extensions;
-using Azure.Identity;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -22,15 +21,6 @@ var host = new HostBuilder()
         if (hostContext.HostingEnvironment.IsDevelopment())
         {
             config.AddUserSecrets<FeedPoller>(false);
-        }
-
-        var configurationRoot = config.Build();
-
-        if (hostContext.HostingEnvironment.IsProduction() || !string.IsNullOrEmpty(configurationRoot["LOAD_KEYVAULT_SETTING_IN_DEV"]))
-        {
-            config.AddAzureKeyVault(
-                new Uri($"https://{configurationRoot["KeyVaultName"]}.vault.azure.net/"),
-                new DefaultAzureCredential());
         }
     })
     // TODO Workaround for https://github.com/Azure/azure-functions-dotnet-worker/issues/1090

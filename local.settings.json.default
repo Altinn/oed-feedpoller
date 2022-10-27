@@ -1,0 +1,20 @@
+{
+  "IsEncrypted": false,
+  "Values": {
+    "AzureWebJobsStorage": "UseDevelopmentStorage=true",
+    "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
+
+    // Do not define ClientId or EncodedJwk here. Either use keyvault references or user secrets. 
+    // - For key vault make sure you're authenticated in VS, and your user has access to "oed-kv"
+    // - For user secrets, run in project root:
+    //       dotnet user-secrets set "MaskinportenSettings:ClientId" "<client id here>"
+    //       dotnet user-secrets set "MaskinportenSettings:EncodedJwk" "<base64 encoded JWK here>"
+
+    "MaskinportenSettings:Environment": "ver2",
+    //"MaskinportenSettings:ClientId": "", 
+    "MaskinportenSettings:Scope": "scopes goes here",
+    //"MaskinportenSettings:EncodedJwk": ""
+
+    "DaSettings:Endpoint": "endpoint goes here"
+  }
+}
