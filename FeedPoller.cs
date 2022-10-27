@@ -1,4 +1,5 @@
 using System.Text.Json;
+using Altinn.ApiClients.Maskinporten.Config;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using oed_feedpoller.Exceptions;
@@ -29,6 +30,7 @@ public class FeedPoller
         _altinnEventService = altinnEventService;
         _cursorService = cursorService;
         _eventMapperService = eventMapperService;
+
     }
 
     [Function(nameof(FeedPoller))]

@@ -3,7 +3,11 @@
     "oed_feedpoller": {
       "commandName": "Project",
       "commandLineArgs": "--port 7158",
-      "launchBrowser": false
+      "launchBrowser": false,
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "LOAD_KEYVAULT_SETTING_IN_DEV": ""
+      }
     }
   }
 }

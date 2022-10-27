@@ -7,6 +7,9 @@ public class EventMapperService : IEventMapperService
     /// <inheritdoc/>
     public CloudEventRequestModel GetCloudEventFromDaEvent(DaEvent daEvent)
     {
-        throw new NotImplementedException();
+        return new CloudEventRequestModel
+        {
+            Subject = daEvent.Id.ToString()
+        };
     }
 }

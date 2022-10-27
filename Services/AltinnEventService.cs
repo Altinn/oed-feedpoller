@@ -19,6 +19,7 @@ public class AltinnEventService : IAltinnEventService
     /// <inheritdoc/>
     public async Task PostEvent(CloudEventRequestModel cloudEvent)
     {
-        throw new NotImplementedException();
+        await Task.CompletedTask;
+        _logger.LogInformation("POSTING EVENT: " + cloudEvent.Subject);
     }
 }
