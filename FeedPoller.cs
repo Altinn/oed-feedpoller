@@ -1,9 +1,13 @@
+using System.Net;
 using System.Text.Json;
 using Microsoft.Azure.Functions.Worker;
+using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using oed_feedpoller.Exceptions;
 using oed_feedpoller.Interfaces;
 using oed_feedpoller.Models;
+using oed_feedpoller.Models.Da;
+using oed_feedpoller.Services;
 
 namespace oed_feedpoller;
 
@@ -15,6 +19,7 @@ public class FeedPoller
     private readonly IAltinnEventService _altinnEventService;
     private readonly ICursorService _cursorService;
     private readonly IEventMapperService _eventMapperService;
+    private readonly IDaApiClient _apiClient;
     private readonly ILogger _logger;
 
     public FeedPoller(
@@ -22,25 +27,23 @@ public class FeedPoller
         IDaEventFeedService daEventFeedService,
         IAltinnEventService altinnEventService,
         ICursorService cursorService,
-        IEventMapperService eventMapperService)
+        IEventMapperService eventMapperService,
+        IDaApiClient apiClient)
     {
         _logger = loggerFactory.CreateLogger<FeedPoller>();
         _daEventFeedService = daEventFeedService;
         _altinnEventService = altinnEventService;
         _cursorService = cursorService;
         _eventMapperService = eventMapperService;
-
+        _apiClient = apiClient;
     }
 
+#if !DEBUG
     [Function(nameof(FeedPoller))]
-    public async Task RunAsync([TimerTrigger("*/5 * * * *"
-#if DEBUG
-        , RunOnStartup = true
-#endif
-    )] TimerInfo timerInfo)
+    public async Task RunAsync([TimerTrigger("*/5 * * * *")] TimerInfo timerInfo)
     {
         _logger.LogDebug($"DA feed import executed at: {DateTime.Now}");
-            
+
         if (timerInfo.IsPastDue)
         {
             _logger.LogWarning("DA feed import was not run on schedule");
@@ -56,12 +59,27 @@ public class FeedPoller
 
         _logger.LogInformation($"Next timer schedule at: {timerInfo.ScheduleStatus?.Next}");
     }
+#else
+    public List<DaEvent> DaEvents { get; set; } = new();
+
+    [Function("test")]
+    public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
+    {
+        await PerformFeedPollAndUpdate();
+        var response = req.CreateResponse(HttpStatusCode.OK);
+        await response.WriteAsJsonAsync(DaEvents);
+        return response;
+    }
+#endif
 
     private async Task PerformFeedPollAndUpdate()
     {
         var cursor = await _cursorService.GetCursor(DaFeedCursorName);
         await foreach (DaEvent daEvent in _daEventFeedService.GetEvents(cursor))
         {
+#if DEBUG
+            DaEvents.Add(daEvent);
+#endif
             CloudEventRequestModel mappedEvent = _eventMapperService.GetCloudEventFromDaEvent(daEvent);
             try
             {
@@ -75,7 +93,7 @@ public class FeedPoller
                 _logger.LogError("Event was rejected by Altinn Event, skipping. Exception message: {exceptionMessage} Serialized mapped event: {mappedEvent}", e.Message, JsonSerializer.Serialize(mappedEvent));
             }
 
-            await _cursorService.UpdateCursor(new Cursor { Name = DaFeedCursorName, Value = daEvent.Id.ToString() });
+            await _cursorService.UpdateCursor(new Cursor { Name = DaFeedCursorName, Value = daEvent.EventId });
         }
     }
 }

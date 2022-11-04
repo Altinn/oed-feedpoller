@@ -16,7 +16,7 @@ public class DaProxy
     }
 
     [Function("DaProxy")]
-    public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "{*any}")] HttpRequestData req)
+    public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get"/*, Route = "{*any}"*/)] HttpRequestData req)
     {
         return await _daEventFeedService.ProxyRequest(req);
     }

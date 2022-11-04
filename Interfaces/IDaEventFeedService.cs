@@ -1,5 +1,6 @@
 ﻿using Microsoft.Azure.Functions.Worker.Http;
 using oed_feedpoller.Models;
+using oed_feedpoller.Models.Da;
 
 namespace oed_feedpoller.Interfaces;
 public interface IDaEventFeedService

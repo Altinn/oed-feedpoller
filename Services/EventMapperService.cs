@@ -4,12 +4,17 @@ using oed_feedpoller.Models;
 namespace oed_feedpoller.Services;
 public class EventMapperService : IEventMapperService
 {
+    private const string CloudEventSource = "urn:digitaltdodsbo";
+
     /// <inheritdoc/>
     public CloudEventRequestModel GetCloudEventFromDaEvent(DaEvent daEvent)
     {
         return new CloudEventRequestModel
         {
-            Subject = daEvent.Id.ToString()
+            Source = new Uri(CloudEventSource),
+            AlternativeSubject = "person/" + daEvent.Estate,
+            Type = daEvent.Type,
+            Data = daEvent.EventData
         };
     }
 }

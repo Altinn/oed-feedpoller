@@ -9,6 +9,7 @@ using Microsoft.Extensions.Logging.Console;
 using oed_feedpoller;
 using oed_feedpoller.Interfaces;
 using oed_feedpoller.Services;
+using oed_feedpoller.Services.Hydrators;
 using oed_feedpoller.Settings;
 
 var host = new HostBuilder()
@@ -51,23 +52,35 @@ var host = new HostBuilder()
     {
         services.Configure<DaSettings>(context.Configuration.GetSection("DaSettings"));
 
-        services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>("DaHttpClient", context.Configuration.GetSection("MaskinportenSettings"),
+        services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.DaHttpClient, context.Configuration.GetSection("MaskinportenSettings"),
             clientDefinition =>
             {
                 // TODO Change to "da" when scopes are provisioned on client
                 clientDefinition.ClientSettings.Scope = GetScopesByPrefix("altinn", clientDefinition.ClientSettings.Scope);
             });
 
-        services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>("EventsHttpClient", context.Configuration.GetSection("MaskinportenSettings"),
+        services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.EventsHttpClient, context.Configuration.GetSection("MaskinportenSettings"),
             clientDefinition =>
             {
                 clientDefinition.ClientSettings.Scope = GetScopesByPrefix("altinn", clientDefinition.ClientSettings.Scope);
             });
 
+        // Use if Redis not available locally
+        //services.AddDistributedMemoryCache();
+        services.AddStackExchangeRedisCache(option =>
+        {
+            option.Configuration = context.Configuration.GetConnectionString("Redis");
+        });
+
         services.AddSingleton<IAltinnEventService, AltinnEventService>();
         services.AddSingleton<ICursorService, CursorService>();
         services.AddSingleton<IDaEventFeedService, DaEventFeedService>();
         services.AddSingleton<IEventMapperService, EventMapperService>();
+        services.AddSingleton<IDaApiClient, DaApiClient>();
+        
+        services.AddSingleton<IHydratorFactory, HydratorFactory>();
+        services.AddSingleton<FormuesfullmaktHydrator>();
+        services.AddSingleton<DodsbosakHydrator>();
 
     })
     .Build();

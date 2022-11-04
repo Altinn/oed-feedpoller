@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using System.Text.Json;
+using Microsoft.Extensions.Logging;
 using oed_feedpoller.Interfaces;
 using oed_feedpoller.Models;
 
@@ -20,6 +21,6 @@ public class AltinnEventService : IAltinnEventService
     public async Task PostEvent(CloudEventRequestModel cloudEvent)
     {
         await Task.CompletedTask;
-        _logger.LogInformation("POSTING EVENT: " + cloudEvent.Subject);
+        _logger.LogInformation("POSTING EVENT: " + JsonSerializer.Serialize(cloudEvent));
     }
 }
