@@ -51,6 +51,7 @@ var host = new HostBuilder()
     .ConfigureServices((context, services) =>
     {
         services.Configure<DaSettings>(context.Configuration.GetSection("DaSettings"));
+        services.Configure<GeneralSettings>(context.Configuration.GetSection("GeneralSettings"));
 
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.DaHttpClient, context.Configuration.GetSection("MaskinportenSettings"),
             clientDefinition =>
@@ -75,6 +76,7 @@ var host = new HostBuilder()
         services.AddSingleton<IAltinnEventService, AltinnEventService>();
         services.AddSingleton<ICursorService, CursorService>();
         services.AddSingleton<IDaEventFeedService, DaEventFeedService>();
+        services.AddSingleton<IDaEventFeedProxyService, DaEventFeedProxyService>();
         services.AddSingleton<IEventMapperService, EventMapperService>();
         services.AddSingleton<IDaApiClient, DaApiClient>();
         

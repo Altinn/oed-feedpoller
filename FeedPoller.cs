@@ -3,11 +3,11 @@ using System.Text.Json;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 using oed_feedpoller.Exceptions;
 using oed_feedpoller.Interfaces;
 using oed_feedpoller.Models;
-using oed_feedpoller.Models.Da;
-using oed_feedpoller.Services;
+using oed_feedpoller.Settings;
 
 namespace oed_feedpoller;
 
@@ -19,23 +19,23 @@ public class FeedPoller
     private readonly IAltinnEventService _altinnEventService;
     private readonly ICursorService _cursorService;
     private readonly IEventMapperService _eventMapperService;
-    private readonly IDaApiClient _apiClient;
     private readonly ILogger _logger;
+    private readonly GeneralSettings _generalSettings;
 
     public FeedPoller(
+        IOptions<GeneralSettings> generalSettings,
         ILoggerFactory loggerFactory,
         IDaEventFeedService daEventFeedService,
         IAltinnEventService altinnEventService,
         ICursorService cursorService,
-        IEventMapperService eventMapperService,
-        IDaApiClient apiClient)
+        IEventMapperService eventMapperService)
     {
+        _generalSettings = generalSettings.Value;
         _logger = loggerFactory.CreateLogger<FeedPoller>();
         _daEventFeedService = daEventFeedService;
         _altinnEventService = altinnEventService;
         _cursorService = cursorService;
         _eventMapperService = eventMapperService;
-        _apiClient = apiClient;
     }
 
 #if !DEBUG
@@ -43,6 +43,11 @@ public class FeedPoller
     public async Task RunAsync([TimerTrigger("*/5 * * * *")] TimerInfo timerInfo)
     {
         _logger.LogDebug($"DA feed import executed at: {DateTime.Now}");
+        if (!_generalSettings.PollingEnabled)
+        {
+            _logger.LogInformation("GeneralSettings:PollingDisabled is true, bailing without doing anything.");
+            return;
+        }
 
         if (timerInfo.IsPastDue)
         {

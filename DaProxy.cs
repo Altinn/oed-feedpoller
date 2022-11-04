@@ -1,23 +1,24 @@
-using System.Net;
+// This proxy will not work locally, and its catchall route will interfere with the "test" http endpoint for triggering a event list poll
+#if !DEBUG
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using Microsoft.Extensions.Logging;
 using oed_feedpoller.Interfaces;
 
 namespace oed_feedpoller;
 
 public class DaProxy
 {
-    private readonly IDaEventFeedService _daEventFeedService;
+    private readonly IDaEventFeedProxyService _daEventFeedProxyService;
 
-    public DaProxy(IDaEventFeedService daEventFeedService)
+    public DaProxy(IDaEventFeedProxyService daEventFeedProxyService)
     {
-        _daEventFeedService = daEventFeedService;
+        _daEventFeedProxyService = daEventFeedProxyService;
     }
 
     [Function("DaProxy")]
-    public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get"/*, Route = "{*any}"*/)] HttpRequestData req)
+    public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get", Route = "{*any}")] HttpRequestData req)
     {
-        return await _daEventFeedService.ProxyRequest(req);
+        return await _daEventFeedProxyService.ProxyRequest(req);
     }
 }
+#endif

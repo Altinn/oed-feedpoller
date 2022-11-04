@@ -1,8 +1,5 @@
-﻿using System.Net;
-using System.Net.Http.Json;
+﻿using System.Net.Http.Json;
 using System.Text.Json;
-using System.Text.RegularExpressions;
-using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using oed_feedpoller.Exceptions;
@@ -16,7 +13,6 @@ public class DaEventFeedService : IDaEventFeedService
 {
     private readonly IHydratorFactory _hydratorFactory;
     private readonly IDaApiClient _daApiClient;
-    private readonly IHttpClientFactory _httpClientFactory;
     private readonly ILogger<DaEventFeedService> _logger;
     private readonly DaSettings _settings;
 
@@ -24,12 +20,10 @@ public class DaEventFeedService : IDaEventFeedService
         IOptions<DaSettings> settings,
         ILoggerFactory loggerFactory,
         IHydratorFactory hydratorFactory,
-        IDaApiClient daApiClient,
-        IHttpClientFactory httpClientFactory)
+        IDaApiClient daApiClient)
     {
         _hydratorFactory = hydratorFactory;
         _daApiClient = daApiClient;
-        _httpClientFactory = httpClientFactory;
         _logger = loggerFactory.CreateLogger<DaEventFeedService>();
         _settings = settings.Value;
     }
@@ -98,41 +92,5 @@ public class DaEventFeedService : IDaEventFeedService
     private string GetIdFromFeedEntry(FeedEntry feedEntry)
     {
         return feedEntry.FeedResult.Uri.Split('/')[^2];
-    }
-
-    public async Task<HttpResponseData> ProxyRequest(HttpRequestData incomingRequest)
-    {
-        var client = _httpClientFactory.CreateClient(Constants.DaHttpClient);
-        var parts = incomingRequest.Url.AbsolutePath.Split('/', 2, StringSplitOptions.RemoveEmptyEntries);
-        if (!Regex.IsMatch(parts[0], _settings.HostEndpointMatch))
-        {
-            var response = incomingRequest.CreateResponse(HttpStatusCode.BadRequest);
-            await response.WriteStringAsync("Invalid endpoint");
-            return response;
-        }
-
-        var url = "https:/" + incomingRequest.Url.AbsolutePath;
-        var query = incomingRequest.Url.Query;
-        var codeParamMatch = Regex.Match(incomingRequest.Url.Query, @"([\?&]code=[^&]*)");
-        if (codeParamMatch.Success)
-        {
-            query = query.Replace(codeParamMatch.Groups[1].Value, string.Empty);
-            if (!string.IsNullOrEmpty(query) && query[0] == '&')
-            {
-                query = '?' + query[1..];
-            }
-        }
-        url += query;
-
-        var outgoingRequest = new HttpRequestMessage(HttpMethod.Get, url);
-        outgoingRequest.Headers.Add("Accept", "application/json");
-
-        var incomingResponse = await client.SendAsync(outgoingRequest);
-        var outgoingResponse = incomingRequest.CreateResponse(incomingResponse.StatusCode);
-        outgoingResponse.Headers.Add("Content-Type", "application/json");
-    
-        await (await incomingResponse.Content.ReadAsStreamAsync()).CopyToAsync(outgoingResponse.Body);
-
-        return outgoingResponse;
     }
 }
