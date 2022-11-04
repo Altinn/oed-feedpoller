@@ -20,17 +20,14 @@ public class FeedPoller
     private readonly ICursorService _cursorService;
     private readonly IEventMapperService _eventMapperService;
     private readonly ILogger _logger;
-    private readonly GeneralSettings _generalSettings;
 
     public FeedPoller(
-        IOptions<GeneralSettings> generalSettings,
         ILoggerFactory loggerFactory,
         IDaEventFeedService daEventFeedService,
         IAltinnEventService altinnEventService,
         ICursorService cursorService,
         IEventMapperService eventMapperService)
     {
-        _generalSettings = generalSettings.Value;
         _logger = loggerFactory.CreateLogger<FeedPoller>();
         _daEventFeedService = daEventFeedService;
         _altinnEventService = altinnEventService;
@@ -43,11 +40,6 @@ public class FeedPoller
     public async Task RunAsync([TimerTrigger("*/5 * * * *")] TimerInfo timerInfo)
     {
         _logger.LogDebug($"DA feed import executed at: {DateTime.Now}");
-        if (!_generalSettings.PollingEnabled)
-        {
-            _logger.LogInformation("GeneralSettings:PollingDisabled is true, bailing without doing anything.");
-            return;
-        }
 
         if (timerInfo.IsPastDue)
         {

@@ -19,8 +19,6 @@
     "DaSettings:HistoryEndpoint": "https://endpoint-goes-here.example",
     "DaSettings:ProxyHostEndpointMatch": "domstol.no$|brreg.no$",
 
-    "General:PollingEnabled": false,
-
     // Default settings for running Redis locally
     "ConnectionStrings:Redis": "127.0.0.1:6379,allowAdmin=true,defaultDatabase=0"
   }
