@@ -12,8 +12,9 @@ public static class Constants
 
     public const string SchemaDodsfallsak = "https://schemas.domstol.no/doedsfallsak.schema.json";
     public const string EventTypeDodsfallsak = "doedsfallsak";
+
     public const string SchemaFormuesfullmakt = "https://schemas.domstol.no/formuesfullmakt.schema.json";
-    public const string EventTypeFormuesfullmakt = "formuesfullmakt";
+    public const string EventTypeFormuesfullmakt = "roleAssignment";
 
     public const string RoleDeceased = "avdoed";
 

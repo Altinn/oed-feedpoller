@@ -4,17 +4,30 @@ using oed_feedpoller.Models;
 namespace oed_feedpoller.Services;
 public class EventMapperService : IEventMapperService
 {
-    private const string CloudEventSource = "urn:digitaltdodsbo";
+    private readonly IMapperFactory _mapperFactory;
+    private const string CloudEventSource = "urn:altinn:events:digitalt-dodsbo:domstoladmin";
+
+    public EventMapperService(IMapperFactory mapperFactory)
+    {
+        _mapperFactory = mapperFactory;
+    }
 
     /// <inheritdoc/>
-    public CloudEventRequestModel GetCloudEventFromDaEvent(DaEvent daEvent)
+    public List<CloudEvent> GetCloudEventsFromDaEvent(DaEvent daEvent)
     {
-        return new CloudEventRequestModel
+        var mapper = _mapperFactory.GetMapper(daEvent.Type);
+        if (mapper == null)
         {
-            Source = new Uri(CloudEventSource),
-            AlternativeSubject = "person/" + daEvent.Estate,
-            Type = daEvent.Type,
-            Data = daEvent.EventData
-        };
+            throw new Exception($"Missing mapper for type {daEvent.Type}");
+        }
+
+        var mappedEvents = mapper.GetMappedEvents(daEvent);
+        foreach (var mappedEvent in mappedEvents)
+        {
+            mappedEvent.Source = new Uri(CloudEventSource);
+            mappedEvent.Subject = "/person/" + daEvent.Estate;
+        }
+
+        return mappedEvents;
     }
 }

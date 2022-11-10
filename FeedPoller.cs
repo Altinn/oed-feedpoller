@@ -77,17 +77,9 @@ public class FeedPoller
 #if DEBUG
             DaEvents.Add(daEvent);
 #endif
-            CloudEventRequestModel mappedEvent = _eventMapperService.GetCloudEventFromDaEvent(daEvent);
-            try
+            foreach (var mappedEvent in _eventMapperService.GetCloudEventsFromDaEvent(daEvent))
             {
                 await _altinnEventService.PostEvent(mappedEvent);
-            }
-            catch (InvalidAltinnEventException e)
-            {
-                // If the event service was able to authenticate/authorize the POST, but found its content invalid for some reason (aka 400 Bad Request), 
-                // we continue to iterate and advance the cursor to avoid an invalid event to block the queue. We log the event as an error to be investigated.
-                // All other errors (failed auth, timeouts etc) should not be caught and cause the process to fail and retry again on next timer iteration
-                _logger.LogError("Event was rejected by Altinn Event, skipping. Exception message: {exceptionMessage} Serialized mapped event: {mappedEvent}", e.Message, JsonSerializer.Serialize(mappedEvent));
             }
 
             await _cursorService.UpdateCursor(new Cursor { Name = DaFeedCursorName, Value = daEvent.EventId });

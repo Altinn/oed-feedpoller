@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 using oed_feedpoller.Models;
 
 namespace oed_feedpoller.Interfaces;
-public interface IDaEventHydrator
+public interface IDaEventMapper
 {
-    public Task<DaEvent> GetHydratedEvent(string eventJson);
     public Task<List<CloudEvent>> GetMappedEvents(DaEvent daEvent);
 }

@@ -18,7 +18,7 @@ public class AltinnEventService : IAltinnEventService
     }
 
     /// <inheritdoc/>
-    public async Task PostEvent(CloudEventRequestModel cloudEvent)
+    public async Task PostEvent(CloudEvent cloudEvent)
     {
         await Task.CompletedTask;
         _logger.LogInformation("POSTING EVENT: " + JsonSerializer.Serialize(cloudEvent));

@@ -3,7 +3,7 @@ using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace oed_feedpoller.Models;
-public class CloudEventRequestModel
+public class CloudEvent
 {
     /// <summary>
     /// Gets or sets the source of the event.

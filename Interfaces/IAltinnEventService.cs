@@ -9,5 +9,5 @@ public interface IAltinnEventService
     /// <param name="cloudEvent">The cloud event to be sent</param>
     /// <exception cref="Exceptions.InvalidAltinnEventException">Thrown if the Altinn Event service rejected the event because of invalid format (ie. 400 Bad Request)</exception>
     /// <returns></returns>
-    public Task PostEvent(CloudEventRequestModel cloudEvent);
+    public Task PostEvent(CloudEvent cloudEvent);
 }
