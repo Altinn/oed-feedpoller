@@ -4,6 +4,7 @@ using oed_feedpoller.Interfaces;
 using oed_feedpoller.Models;
 using oed_feedpoller.Models.BusinessObjects;
 using oed_feedpoller.Models.Da;
+using oed_feedpoller.Models.Da.Dto;
 
 namespace oed_feedpoller.Services.Hydrators;
 
@@ -18,7 +19,7 @@ public class FormuesfullmaktHydrator : IDaEventHydrator
         _logger = loggerFactory.CreateLogger<FormuesfullmaktHydrator>();
     }
 
-    public async Task<DaEvent> GetHydratedEvent(string eventJson)
+    public async Task<DaEvent> GetHydratedEvent(string eventJson, JsonPatchDocument jsonPatchDocument)
     {
         var formuesFullmakt = JsonSerializer.Deserialize<Formuesfullmakt>(eventJson)!;
 

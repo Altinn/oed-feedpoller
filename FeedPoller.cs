@@ -58,13 +58,22 @@ public class FeedPoller
     }
 #else
     public List<DaEvent> DaEvents { get; set; } = new();
+    public List<CloudEvent> CloudEvents { get; set; } = new();
 
     [Function("test")]
     public async Task<HttpResponseData> RunAsync([HttpTrigger(AuthorizationLevel.Function, "get")] HttpRequestData req)
     {
         await PerformFeedPollAndUpdate();
         var response = req.CreateResponse(HttpStatusCode.OK);
-        await response.WriteAsJsonAsync(DaEvents);
+        if (req.Url.Query.Contains("cloudevent"))
+        {
+            await response.WriteAsJsonAsync(CloudEvents);
+        }
+        else
+        {
+            await response.WriteAsJsonAsync(DaEvents);
+        }
+
         return response;
     }
 #endif
@@ -77,12 +86,15 @@ public class FeedPoller
 #if DEBUG
             DaEvents.Add(daEvent);
 #endif
-            foreach (var mappedEvent in _eventMapperService.GetCloudEventsFromDaEvent(daEvent))
+            foreach (var cloudEvent in _eventMapperService.GetCloudEventsFromDaEvent(daEvent))
             {
-                await _altinnEventService.PostEvent(mappedEvent);
+#if DEBUG
+                CloudEvents.Add(cloudEvent);
+#endif
+                await _altinnEventService.PostEvent(cloudEvent);
             }
 
-            await _cursorService.UpdateCursor(new Cursor { Name = DaFeedCursorName, Value = daEvent.EventId });
+            //await _cursorService.UpdateCursor(new Cursor { Name = DaFeedCursorName, Value = daEvent.EventId });
         }
     }
 }

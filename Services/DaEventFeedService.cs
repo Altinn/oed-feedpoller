@@ -59,9 +59,17 @@ public class DaEventFeedService : IDaEventFeedService
         var eventId = GetIdFromFeedEntry(feedEntry);
         try
         {
-            var eventJson = await _daApiClient.GetCachedAsync(feedEntry.FeedResult.Uri);
-            var schemaReference = JsonSerializer.Deserialize<SchemaReference>(eventJson)!;
-            
+            var eventJsonFullTask = _daApiClient.GetCachedAsync(feedEntry.FeedResult.Uri);
+            var eventJsonChangeTask = _daApiClient.GetCachedAsync(feedEntry.FeedChange.Uri);
+
+            await Task.WhenAll(eventJsonFullTask, eventJsonChangeTask);
+
+            var eventJsonFull = eventJsonFullTask.Result;
+            var eventJsonChange = eventJsonChangeTask.Result;
+
+            var schemaReference = JsonSerializer.Deserialize<SchemaReference>(eventJsonFull)!;
+            var jsonPatch = JsonSerializer.Deserialize<JsonPatchDocument>(eventJsonChange)!;
+
             if (!string.IsNullOrEmpty(schemaReference.Id))
             {
                 _logger.LogWarning("Feed entry with id {eventId} points to schema {schemaId}, skipping", eventId, schemaReference.Id);
@@ -73,7 +81,7 @@ public class DaEventFeedService : IDaEventFeedService
             var daEventHydrator = _hydratorFactory.GetHydrator(schemaDefinition);
             if (daEventHydrator != null)
             {
-                var daEvent = await daEventHydrator.GetHydratedEvent(eventJson);
+                var daEvent = await daEventHydrator.GetHydratedEvent(eventJsonFull, jsonPatch);
                 daEvent.EventId = eventId;
                 daEvent.Timestamp = DateTimeOffset.FromUnixTimeSeconds(feedEntry.Timestamp);
                 return daEvent;

@@ -16,8 +16,8 @@ public class FormuesfullmaktMapper : IDaEventMapper
                 Type = "roleAssignment",
                 Data = new
                 {
-                    Recipient = eventData.Ssn,
-                    RoleCode = "formuesfullmakt"
+                    recipient = eventData.Ssn,
+                    roleCode = "formuesfullmakt"
                 }
             }
         };

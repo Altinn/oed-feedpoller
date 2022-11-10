@@ -6,6 +6,12 @@ namespace oed_feedpoller.Models;
 public class CloudEvent
 {
     /// <summary>
+    /// Gets or sets the unique id of the event.
+    /// </summary>
+    [JsonPropertyName("id")]
+    public string Id { get; set; } = string.Empty;
+
+    /// <summary>
     /// Gets or sets the source of the event.
     /// </summary>
     [JsonPropertyName("source")]

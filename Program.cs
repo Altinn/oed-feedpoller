@@ -10,6 +10,7 @@ using oed_feedpoller;
 using oed_feedpoller.Interfaces;
 using oed_feedpoller.Services;
 using oed_feedpoller.Services.Hydrators;
+using oed_feedpoller.Services.Mappers;
 using oed_feedpoller.Settings;
 
 var host = new HostBuilder()
@@ -82,6 +83,10 @@ var host = new HostBuilder()
         services.AddSingleton<IHydratorFactory, HydratorFactory>();
         services.AddSingleton<FormuesfullmaktHydrator>();
         services.AddSingleton<DodsbosakHydrator>();
+
+        services.AddSingleton<IMapperFactory, MapperFactory>();
+        services.AddSingleton<FormuesfullmaktMapper>();
+        services.AddSingleton<DodsbosakMapper>();
 
     })
     .Build();

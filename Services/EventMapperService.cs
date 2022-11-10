@@ -22,10 +22,13 @@ public class EventMapperService : IEventMapperService
         }
 
         var mappedEvents = mapper.GetMappedEvents(daEvent);
+        var idx = 0;
         foreach (var mappedEvent in mappedEvents)
         {
+            mappedEvent.Id = daEvent.EventId + "_" + idx;
             mappedEvent.Source = new Uri(CloudEventSource);
             mappedEvent.Subject = "/person/" + daEvent.Estate;
+            idx++;
         }
 
         return mappedEvents;

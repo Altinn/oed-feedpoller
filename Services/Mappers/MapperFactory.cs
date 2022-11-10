@@ -1,27 +1,26 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using oed_feedpoller.Interfaces;
-using oed_feedpoller.Models.Da;
-using oed_feedpoller.Models.Da.Dto;
 
-namespace oed_feedpoller.Services.Hydrators;
-public class HydratorFactory : IHydratorFactory
+namespace oed_feedpoller.Services.Mappers;
+public class MapperFactory : IMapperFactory
 {
     private readonly IServiceProvider _serviceProvider;
 
-    public HydratorFactory(IServiceProvider serviceProvider)
+    public MapperFactory(IServiceProvider serviceProvider)
     {
         _serviceProvider = serviceProvider;
     }
 
-    public IDaEventHydrator? GetHydrator(SchemaDefinition schemaDefinition)
-    {
-        switch (schemaDefinition.Id)
-        {
-            case Constants.SchemaDodsfallsak:
-                return _serviceProvider.GetRequiredService<DodsbosakHydrator>();
 
-            case Constants.SchemaFormuesfullmakt:
-                return _serviceProvider.GetRequiredService<FormuesfullmaktHydrator>();
+    public IDaEventMapper? GetMapper(string eventType)
+    {
+        switch (eventType)
+        {
+            case Constants.EventTypeDodsfallsak:
+                return _serviceProvider.GetRequiredService<DodsbosakMapper>();
+
+            case Constants.EventTypeFormuesfullmakt:
+                return _serviceProvider.GetRequiredService<FormuesfullmaktMapper>();
         }
 
         return null;

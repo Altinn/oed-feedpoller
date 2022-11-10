@@ -4,6 +4,7 @@ using oed_feedpoller.Interfaces;
 using oed_feedpoller.Models;
 using oed_feedpoller.Models.BusinessObjects;
 using oed_feedpoller.Models.Da;
+using oed_feedpoller.Models.Da.Dto;
 
 namespace oed_feedpoller.Services.Hydrators;
 public class DodsbosakHydrator : IDaEventHydrator
@@ -17,13 +18,19 @@ public class DodsbosakHydrator : IDaEventHydrator
         _logger = loggerFactory.CreateLogger<DodsbosakHydrator>();
     }
 
-    public async Task<DaEvent> GetHydratedEvent(string eventJson)
+    public async Task<DaEvent> GetHydratedEvent(string eventJson, JsonPatchDocument jsonPatchDocument)
     {
         var dodsfallsak = JsonSerializer.Deserialize<Dodsfallsak>(eventJson)!;
-
         var candidateList = new CandidateList();
-        var partResolvingTasks = new List<Task>();
-        // TODO! parallellize
+
+        foreach (var patch in jsonPatchDocument.Patch)
+        {
+            if (patch.Op == JsonPatchOp.Remove)
+            {
+                _logger.LogWarning("remove");
+            }
+        }
+
         foreach (var part in dodsfallsak.Parties)
         {
             var person = await _daApiClient.GetCachedAsync<Person>(part.PartyCid.Uri);

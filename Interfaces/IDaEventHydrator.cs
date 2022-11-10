@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using oed_feedpoller.Models;
+﻿using oed_feedpoller.Models;
+using oed_feedpoller.Models.Da.Dto;
 
 namespace oed_feedpoller.Interfaces;
 public interface IDaEventHydrator
 {
-    public Task<DaEvent> GetHydratedEvent(string eventJson);
-    public Task<List<CloudEvent>> GetMappedEvents(DaEvent daEvent);
+    public Task<DaEvent> GetHydratedEvent(string eventJsonFull, JsonPatchDocument jsonPatch);
 }
