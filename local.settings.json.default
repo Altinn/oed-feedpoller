@@ -11,6 +11,7 @@
     //       dotnet user-secrets set "MaskinportenSettings:EncodedJwk" "<base64 encoded JWK here>"
 
     "MaskinportenSettings:Environment": "ver2",
+    "MaskinportenSettings:Resource": "required aud claim goes here",
     //"MaskinportenSettings:ClientId": "", 
     "MaskinportenSettings:Scope": "scopes goes here",
     //"MaskinportenSettings:EncodedJwk": ""
