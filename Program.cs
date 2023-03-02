@@ -56,8 +56,7 @@ var host = new HostBuilder()
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.DaHttpClient, context.Configuration.GetSection("MaskinportenSettings"),
             clientDefinition =>
             {
-                // TODO Change to "da" when scopes are provisioned on client
-                clientDefinition.ClientSettings.Scope = GetScopesByPrefix("altinn", clientDefinition.ClientSettings.Scope);
+                clientDefinition.ClientSettings.Scope = GetScopesByPrefix("domstol", clientDefinition.ClientSettings.Scope);
             });
 
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.EventsHttpClient, context.Configuration.GetSection("MaskinportenSettings"),
