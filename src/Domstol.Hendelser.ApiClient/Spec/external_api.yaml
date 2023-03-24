@@ -1,0 +1,196 @@
+openapi: 3.0.0
+info:
+  title: oppgjoer-etter-doedsfall_digdir
+  version: '1.0'
+servers:
+  - url: https://hendelsesliste.test.domstol.no/api
+security:
+  - BearerAuth:
+    - domstolene:forvaltningssaker:doedsfall.read
+paths:
+  /hendelsesliste:
+    get:
+      summary: Get a list of patches represented as lists of cloud events
+      parameters:
+        - name: from
+          in: query
+          description: Use to set paging start position
+          schema:
+            type: string
+            format: date-time
+          example: '2023-02-01T00:00:00Z'
+        - name: limit
+          in: query
+          description: Use to set paging size
+          schema:
+            type: integer
+          example: 100
+      responses:
+        '200':
+          description: List of consumable events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: array
+                  items:
+                    $ref: 'https://raw.githubusercontent.com/cloudevents/spec/main/cloudevents/formats/cloudevents.json'
+        '401':
+          description: Missing authorization token for Maskinporten
+  /objects/{uuid}:
+    get:
+      summary: Get latest object state given its UUID
+      parameters:
+        - name: uuid
+          in: path
+          required: true
+          description: Use to set paging start position
+          schema:
+            type: string
+            format: uuid
+          example: 8ef8cd87-8635-4005-ba8a-ce276dc2aa9d
+      responses:
+        '200':
+          description: Object state, adapted for consuming service
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Sak'
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    Part:
+      properties:
+        nin:
+          type: string
+          minLength: 11
+          maxLength: 11
+          description: National identification number (F-/D-/FH-/H-/FST-nummer)
+        role:
+          type: string
+          enum:
+            - PART_ANNEN,
+            - GJENLEV_EKTEFELLE_PARTNER
+            - GJENLEV_PARTNER
+            - GJENLEV_SAMBOER
+            - BARN
+            - BARNEBARN
+            - SAERKULLSBARN
+            - SAERKULLSBARN_BARN
+            - FAR
+            - MOR
+            - SOESKEN
+            - SOESKENS_BARN
+            - SOESKENS_BARNEBARN
+            - HALV_SOESKEN
+            - HALV_SOESKENS_BARN
+            - FARFAR
+            - FARMOR
+            - MORFAR
+            - MORMOR
+            - ONKEL
+            - TANTE
+            - FETTER
+            - KUSINE
+            - STATEN
+            - AVDOEDE
+            - FORDRINGSHAVER
+            - AVDOEDE_EKTEFELLE_PARTNER
+        formuesfullmakt:
+          type: string
+          enum:
+            - INGEN
+            - ALTINN_DODSBO
+        signertDato:
+          type: string
+        onsketSkifteForm:
+          type: string
+        paatarGjeldsansvar:
+          type: boolean
+        godkjennerSkifteAttest:
+          type: boolean
+    Sak:
+      properties:
+        sakId:
+          type: string
+          format: uuid
+        avdoede:
+          type: string
+          minLength: 11
+          maxLength: 11
+          description: National identification number (F-/D-/FH-/H-/FST-nummer)
+        embeteId:
+          type: string
+          enum:
+            - TAGD
+            - TBUS
+            - TFNO
+            - THEL
+            - THOD
+            - THOS
+            - TIOF
+            - TMHA
+            - TMOR
+            - TNTS
+            - TOIN
+            - TOSL
+            - TRAB
+            - TROG
+            - TSOF
+            - TSOL
+            - TSOS
+            - TSRO
+            - TTEL
+            - TTRO
+            - TVES
+            - TVFI
+            - TVIN
+        parter:
+          type: array
+          items:
+            $ref: '#/components/schemas/Part'
+        receivedDate:
+          type: string
+          format: date
+        skifteform:
+          type: string
+          enum:
+            - IKKE_AVGJORT
+            - OFFENTLIG_SKIFTE
+            - USKIFTE
+            - PRIVAT_SKIFTE
+            - PRIVAT_SKIFTE_AV_DODSBO_MED_LITEN_VERDI
+      example:
+        {
+          "sakId": "8ef8cd87-8635-4005-ba8a-ce276dc2aa9d",
+          "avdoede": "16904498932",
+          "embeteId": "JVIN",
+          "parter": [
+            {
+              "nin": "21891849688",
+              "role": "PART_ANNEN",
+              "formuesfullmakt": null,
+              "signertDato": null,
+              "onsketSkifteForm": null,
+              "paatarGjeldsansvar": false,
+              "godkjennerSkifteAttest": false
+            },
+            {
+              "nin": "16861749510",
+              "role": "PART_ANNEN",
+              "formuesfullmakt": null,
+              "signertDato": null,
+              "onsketSkifteForm": null,
+              "paatarGjeldsansvar": false,
+              "godkjennerSkifteAttest": false
+            }
+          ],
+          "receivedDate": "2023-02-10",
+          "skifteform": "IKKE_AVGJORT",
+        }
+
