@@ -9,8 +9,5 @@ namespace Oed.FeedPoller.Models
 
         [JsonPropertyName("role")]
         public string Role { get; set; }
-
-        [JsonPropertyName("roleObjectNin")]
-        public string RoleObjectNin { get; set; }
     }
 }

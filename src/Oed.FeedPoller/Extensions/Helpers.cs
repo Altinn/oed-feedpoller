@@ -1,4 +1,5 @@
 ﻿using System.Diagnostics.Contracts;
+using CloudNative.CloudEvents;
 
 namespace Oed.FeedPoller.Extensions;
 public static class Helpers
@@ -45,5 +46,10 @@ public static class Helpers
     {
         Guid.TryParse(s, out Guid guid);
         return guid;
+    }
+
+    public static string? GetCursorValue(this CloudEvent cloudEvent)
+    {
+        return cloudEvent.Time?.ToUniversalTime().ToString("yyyy-MM-ddTHH:mm:ssZ");
     }
 }

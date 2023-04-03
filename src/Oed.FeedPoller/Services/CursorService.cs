@@ -44,18 +44,18 @@ public class CursorService : ICursorService
                     throw new NullReferenceException("Cursor deserialized to null");
                 }
 
-                _logger.LogInformation($"Cursor {cursorName} returned, pointing at {cursor.Value}");
+                _logger.LogInformation("Cursor {CursorName} returned, pointing at {CursorValue}", cursorName, cursor.Value);
 
-                return cursor;
+                return cursor;      
             }
             catch (Exception e)
             {
-                _logger.LogError($"Unable to deserialize cursor {cursorName}, returning default cursor. Exception was: " + e.Message);
+                _logger.LogError("Unable to deserialize cursor {CursorName}, returning default cursor. Exception was: {ExceptionMessage}", cursorName, e.Message);
             }
         }
         else
         {
-            _logger.LogInformation($"Cursor {cursorName} doesn't exist, returning default cursor");
+            _logger.LogInformation("Cursor {CursorName} doesn't exist, returning default cursor", cursorName);
         }
 
         return new Cursor
@@ -70,7 +70,7 @@ public class CursorService : ICursorService
     {
         if (!_isConnected) await ConnectToBlobStorage();
 
-        _logger.LogInformation($"Cursor {cursor.Name} updated, pointing at {cursor.Value}");
+        _logger.LogInformation("Cursor {CursorName} updated, pointing at {CursorValue}", cursor.Name, cursor.Value);    
 
         var blobClient = _containerClient.GetBlobClient(cursor.Name);
 

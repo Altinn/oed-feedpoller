@@ -6,6 +6,8 @@ using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Oed.FeedPoller.Interfaces;
 using System.Text.Json;
+using Oed.FeedPoller.Extensions;
+using Oed.FeedPoller.Models;
 
 namespace Oed.FeedPoller.AzFunc;
 
@@ -71,23 +73,22 @@ public class FeedPollerFunction
 
         return response;
     }
-#endif
+
 
     [Function("test")]
     public async Task<HttpResponseData> TestAsync([HttpTrigger(AuthorizationLevel.Function, "post")] HttpRequestData req)
     {
         _logger.LogInformation("Processing incoming test data...");
 
-        string requestBody = String.Empty;
-        using (StreamReader streamReader = new StreamReader(req.Body))
+        string requestBody;
+        using (var streamReader = new StreamReader(req.Body))
         {
             requestBody = await streamReader.ReadToEndAsync();
         }
-        DaEventFeedTestModel testData = JsonSerializer.Deserialize<DaEventFeedTestModel>(requestBody);
-
+        
+        var testData = JsonSerializer.Deserialize<DaEventFeedTestModel>(requestBody);
         if (testData != null)
         {
-
             // flatten event feed structure
             var daEvents = testData.DaEventList.SelectMany(list => list).Select(list2 => list2).ToList();
 
@@ -97,7 +98,7 @@ public class FeedPollerFunction
             {
                 await _altinnEventService.PostEvent(cloudEvent);
 
-                //await _cursorService.UpdateCursor(new Cursor { Name = DaFeedCursorName, Value = daEvent.EventId });
+                await _cursorService.UpdateCursor(new Cursor { Name = DaFeedCursorName, Value = cloudEvent.GetCursorValue() });
             }
 
             var response = req.CreateResponse(HttpStatusCode.OK);
@@ -111,12 +112,12 @@ public class FeedPollerFunction
             }
             return response;
         }
-        else
-        {
-            _logger.LogError("Unable to deserialize request body.");
-        }
+        
+        _logger.LogError("Unable to deserialize request body");
+        throw new InvalidDataException();
     }
-
+#endif
+    
     private async Task PerformFeedPollAndUpdate()
     {
         var cursor = await _cursorService.GetCursor(DaFeedCursorName);
@@ -126,7 +127,7 @@ public class FeedPollerFunction
         {
             await _altinnEventService.PostEvent(cloudEvent);
 
-            //await _cursorService.UpdateCursor(new Cursor { Name = DaFeedCursorName, Value = daEvent.EventId });
+            await _cursorService.UpdateCursor(new Cursor { Name = DaFeedCursorName, Value = cloudEvent.GetCursorValue() });
         }
     }
 }

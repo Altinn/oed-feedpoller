@@ -29,19 +29,19 @@ public class DaEventFeedService : IDaEventFeedService
     {
         DateTime after = DateTime.Parse(cursor.Value ?? string.Empty);
 
-        _logger.LogInformation($"Getting events after: ${after}");
+        _logger.LogInformation("Getting events after: {After}", after);
         var daEventFeed = await _daEventFeedClient.HendelseslisteAsync(after, _settings.MaxItemsPerPoll);
 
         // implement two-pass approach to retrieve each /object/ only once (within this scope)
         Dictionary<Guid, Sak> daCases = new Dictionary<Guid, Sak>();
-        List<Guid> allCaseIds = new List<Guid>();
 
         // flatten event feed structure
         var daEvents = daEventFeed.SelectMany(list => list).Select(list2 => list2).ToList();
 
         // convert event Ids into valid case Guids, ignoring non-guids
-        var caseIds = daEvents.Select(daCase => daCase.Id.StrToGuid()).SkipNulls().ToList();
+        List<Guid> allCaseIds = daEvents.Select(daCase => daCase.Id.StrToGuid()).SkipNulls().ToList();
 
+        // TODO! Consider fetching in parallell
         foreach (var caseId in allCaseIds)
         {
             daCases[caseId] = await _daEventFeedClient.ObjectsAsync(caseId);
@@ -51,8 +51,6 @@ public class DaEventFeedService : IDaEventFeedService
 
         return outgoingEvents;
     }
-
-
 
     public IEnumerable<CloudEvent> ConvertEventFeed(ICollection<DaEvent> daEventFeed, ICollection<Sak> daCases)
     {
@@ -74,6 +72,4 @@ public class DaEventFeedService : IDaEventFeedService
 
         return outgoingEvents;
     }
-
-    
 }
