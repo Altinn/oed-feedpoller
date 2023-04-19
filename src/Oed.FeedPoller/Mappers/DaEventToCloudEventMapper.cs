@@ -39,6 +39,18 @@ public static class DaEventToCloudEventMapper
                         Role = Constants.EstatePoaRole
                     });
                 }
+
+                // TODO! Finn ut om vi må forholde oss til `part.GodkjennerSkifteAttest`
+                // Se https://altinn.slack.com/archives/C040J178EUC/p1680172452287319?thread_ts=1678195684.004959&cid=C040J178EUC
+
+                if (sak.Skifteform == SakSkifteform.PRIVAT_SKIFTE && part.PaatarGjeldsansvar)
+                {
+                    roles.Add( new HeirRole
+                    {
+                        Nin = part.Nin,
+                        Role = Constants.EstateProbateRole
+                    });
+                }
                 
                 roles.Add( new HeirRole
                 {

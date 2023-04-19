@@ -11,6 +11,7 @@ public static class Constants
     public const string HeirsAddedEventType = "no.altinn.events.digitalt-dodsbo.v1.heir-roles-updated";
 
     public const string EstatePoaRole = "urn:digitaltdodsbo:formuesfullmakt";
+    public const string EstateProbateRole = "urn:digitaltdodsbo:skifteattest";
     
     public const string ServiceResourceId = "urn:altinn:resource:dodsbo.domstoladmin.api";
 }
