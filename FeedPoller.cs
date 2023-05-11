@@ -45,6 +45,6 @@ public class FeedPoller
     private async Task PerformFeedPollAndUpdate()
     {
         HttpClient httpClient = _clientFactory.CreateClient(Constants.EventsHttpClient);
-        HttpResponseMessage result = await httpClient.PostAsync(_apiSettings.ProcessDaEventFeedUrl, null);
+        HttpResponseMessage result = await httpClient.PostAsync(_apiSettings.TriggerProcessDaEventFeedUrl, null);
     }
 }

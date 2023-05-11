@@ -49,7 +49,7 @@ var host = new HostBuilder()
     })
     .ConfigureServices((context, services) =>
     {
-        services.Configure<ApiSettings>(context.Configuration.GetSection("ApiSettings"));
+        services.Configure<ApiSettings>(context.Configuration.GetSection("DaSettings"));
 
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.DaHttpClient, context.Configuration.GetSection("MaskinportenSettings"),
             clientDefinition =>
