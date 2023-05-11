@@ -1,4 +1,4 @@
-﻿namespace oed_feedpoller.Exceptions;
+﻿namespace Digdir.Oed.FeedPoller.Exceptions;
 public class InvalidAltinnEventException : Exception
 {
 }

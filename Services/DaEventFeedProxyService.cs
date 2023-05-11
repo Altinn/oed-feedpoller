@@ -1,17 +1,17 @@
 ﻿using System.Net;
 using System.Text.RegularExpressions;
+using Digdir.Oed.FeedPoller.Interfaces;
+using Digdir.Oed.FeedPoller.Settings;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Options;
-using oed_feedpoller.Interfaces;
-using oed_feedpoller.Settings;
 
-namespace oed_feedpoller.Services;
+namespace Digdir.Oed.FeedPoller.Services;
 public class DaEventFeedProxyService : IDaEventFeedProxyService
 {
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly DaSettings _settings;
+    private readonly ApiSettings _settings;
 
-    public DaEventFeedProxyService(IOptions<DaSettings> settings, IHttpClientFactory httpClientFactory)
+    public DaEventFeedProxyService(IOptions<ApiSettings> settings, IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
         _settings = settings.Value;

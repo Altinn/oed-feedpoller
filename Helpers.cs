@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace oed_feedpoller;
+namespace Digdir.Oed.FeedPoller;
 public static class Helpers
 {
     public static bool ShouldRunUpdate(DateTime? timeToCheck = null)
