@@ -1,10 +1,11 @@
 // This proxy will not work locally, and its catchall route will interfere with the "test" http endpoint for triggering a event list poll
 #if !DEBUG
+
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
-using oed_feedpoller.Interfaces;
+using Digdir.Oed.FeedPoller.Interfaces;
 
-namespace oed_feedpoller;
+namespace Digdir.Oed.FeedPoller;
 
 public class DaProxy
 {

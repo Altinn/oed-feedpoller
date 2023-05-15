@@ -6,12 +6,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
-using oed_feedpoller;
-using oed_feedpoller.Interfaces;
-using oed_feedpoller.Services;
-using oed_feedpoller.Services.Hydrators;
-using oed_feedpoller.Services.Mappers;
-using oed_feedpoller.Settings;
+using Digdir.Oed.FeedPoller;
+using Digdir.Oed.FeedPoller.Interfaces;
+using Digdir.Oed.FeedPoller.Services;
+using Digdir.Oed.FeedPoller.Settings;
 
 var host = new HostBuilder()
     .ConfigureAppConfiguration((hostContext, config) =>
@@ -51,18 +49,18 @@ var host = new HostBuilder()
     })
     .ConfigureServices((context, services) =>
     {
-        services.Configure<DaSettings>(context.Configuration.GetSection("DaSettings"));
+        services.Configure<ApiSettings>(context.Configuration.GetSection("DaSettings"));
 
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.DaHttpClient, context.Configuration.GetSection("MaskinportenSettings"),
             clientDefinition =>
             {
-                clientDefinition.ClientSettings.Scope = GetScopesByPrefix("domstol", clientDefinition.ClientSettings.Scope);
+                clientDefinition.ClientSettings.Scope = ScopesByPrefix("domstol", clientDefinition.ClientSettings.Scope);
             });
 
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.EventsHttpClient, context.Configuration.GetSection("MaskinportenSettings"),
             clientDefinition =>
             {
-                clientDefinition.ClientSettings.Scope = GetScopesByPrefix("altinn", clientDefinition.ClientSettings.Scope);
+                clientDefinition.ClientSettings.Scope = ScopesByPrefix("altinn", clientDefinition.ClientSettings.Scope);
             });
 
         // Use if Redis not available locally
@@ -71,28 +69,14 @@ var host = new HostBuilder()
         {
             option.Configuration = context.Configuration.GetConnectionString("Redis");
         });
-
-        services.AddSingleton<IAltinnEventService, AltinnEventService>();
-        services.AddSingleton<ICursorService, CursorService>();
-        services.AddSingleton<IDaEventFeedService, DaEventFeedService>();
-        services.AddSingleton<IDaEventFeedProxyService, DaEventFeedProxyService>();
-        services.AddSingleton<IEventMapperService, EventMapperService>();
-        services.AddSingleton<IDaApiClient, DaApiClient>();
         
-        services.AddSingleton<IHydratorFactory, HydratorFactory>();
-        services.AddSingleton<FormuesfullmaktHydrator>();
-        services.AddSingleton<DodsbosakHydrator>();
-
-        services.AddSingleton<IMapperFactory, MapperFactory>();
-        services.AddSingleton<FormuesfullmaktMapper>();
-        services.AddSingleton<DodsbosakMapper>();
-
+        services.AddSingleton<IDaEventFeedProxyService, DaEventFeedProxyService>();
     })
     .Build();
 
 host.Run();
 
-string GetScopesByPrefix(string prefix, string scopes)
+string ScopesByPrefix(string prefix, string scopes)
 {
     var scopeList = scopes.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
     var filteredScopes = scopeList.Where(scope => scope.StartsWith($"{prefix}:")).ToList();

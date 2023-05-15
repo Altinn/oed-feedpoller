@@ -5,8 +5,13 @@
     <OutputType>Exe</OutputType>
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
-    <RootNamespace>oed_feedpoller</RootNamespace>
+    <RootNamespace>Digdir.Oed.FeedPoller</RootNamespace>
     <UserSecretsId>386c15b0-3377-4c32-90ef-e42580245cd1</UserSecretsId>
+    <AssemblyName>Digdir.Oed.FeedPoller</AssemblyName>
+    <PackageId>Digdir.Oed.FeedPoller</PackageId>
+    <Authors>Digdir</Authors>
+    <Company>Digdir</Company>
+    <Product>Digdir Oed Feedpoller</Product>
   </PropertyGroup>
   <ItemGroup>
     <PackageReference Include="Altinn.ApiClients.Maskinporten" Version="5.0.0" />
@@ -14,6 +19,7 @@
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
+    <PackageReference Include="CloudNative.CloudEvents" Version="2.6.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.11.0-preview2" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.ApplicationInsights" Version="1.0.0-preview3" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />

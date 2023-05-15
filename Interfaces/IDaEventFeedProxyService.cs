@@ -1,6 +1,6 @@
 ﻿using Microsoft.Azure.Functions.Worker.Http;
 
-namespace oed_feedpoller.Interfaces;
+namespace Digdir.Oed.FeedPoller.Interfaces;
 public interface IDaEventFeedProxyService
 {
     /// <summary>
