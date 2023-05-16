@@ -18,7 +18,6 @@
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
-    <PackageReference Include="Azure.Storage.Blobs" Version="12.14.1" />
     <PackageReference Include="CloudNative.CloudEvents" Version="2.6.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.11.0-preview2" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.ApplicationInsights" Version="1.0.0-preview3" />
@@ -42,6 +41,9 @@
     </None>
     <None Update="worker.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="secrets.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>

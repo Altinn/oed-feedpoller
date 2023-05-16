@@ -8,16 +8,16 @@ namespace Digdir.Oed.FeedPoller;
 public class FeedPoller
 {
     private readonly ILogger _logger;
-    private readonly ApiSettings _apiSettings;
+    private readonly OedSettings _oedSettings;
     private readonly IHttpClientFactory _clientFactory;
 
     public FeedPoller(
         ILoggerFactory loggerFactory,
         IHttpClientFactory clientFactory,
-        IOptions<ApiSettings> oedEventsSettings)
+        IOptions<OedSettings> oedEventsSettings)
     {
         _logger = loggerFactory.CreateLogger<FeedPoller>();
-        _apiSettings = oedEventsSettings.Value;
+        _oedSettings = oedEventsSettings.Value;
         _clientFactory = clientFactory;
     }
 
@@ -37,7 +37,14 @@ public class FeedPoller
             return;
         }
 
-        await PerformFeedPollAndUpdate();
+        if (Uri.IsWellFormedUriString(_oedSettings.OedEventsBaseUrl, UriKind.Absolute))
+        {
+            await PerformFeedPollAndUpdate();
+        }
+        else
+        {
+            _logger.LogError("Invalid configuration for OedEventsBaseUrl, should be an absolute url.");
+        }
 
         _logger.LogInformation($"Next timer schedule at: {timerInfo.ScheduleStatus?.Next}");
     }
@@ -45,6 +52,12 @@ public class FeedPoller
     private async Task PerformFeedPollAndUpdate()
     {
         HttpClient httpClient = _clientFactory.CreateClient(Constants.EventsHttpClient);
-        HttpResponseMessage result = await httpClient.PostAsync(_apiSettings.TriggerProcessDaEventFeedUrl, null);
+        string url = _oedSettings.OedEventsBaseUrl?.TrimEnd('/') + "/process";
+        
+        HttpResponseMessage result = await httpClient.PostAsync(url, null);
+        if (!result.IsSuccessStatusCode)
+        {
+            _logger.LogError($"Failed to poll feed from {url}, status code: {result.StatusCode}");
+        }
     }
 }

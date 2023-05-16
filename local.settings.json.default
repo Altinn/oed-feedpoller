@@ -4,8 +4,8 @@
     "AzureWebJobsStorage": "UseDevelopmentStorage=true",
     "FUNCTIONS_WORKER_RUNTIME": "dotnet-isolated",
 
-    "ApiSettings:ProxyHostEndpointMatch": "domstol.no$|brreg.no$",
-    "ApiSettings:ProcessDaEventFeedUrl": "",
+    "OedSettings:DaProxyHostEndpointMatch": "domstol.no$|brreg.no$",
+    "OedSettings:OedEventsBaseUrl": "https://digdir.apps.tt02.altinn.no/digdir/oed-events/da-events/api/v1/",
 
     // Default settings for running Redis locally
     "ConnectionStrings:Redis": "127.0.0.1:6379,allowAdmin=true,defaultDatabase=0"

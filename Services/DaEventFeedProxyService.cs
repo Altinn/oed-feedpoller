@@ -9,9 +9,9 @@ namespace Digdir.Oed.FeedPoller.Services;
 public class DaEventFeedProxyService : IDaEventFeedProxyService
 {
     private readonly IHttpClientFactory _httpClientFactory;
-    private readonly ApiSettings _settings;
+    private readonly OedSettings _settings;
 
-    public DaEventFeedProxyService(IOptions<ApiSettings> settings, IHttpClientFactory httpClientFactory)
+    public DaEventFeedProxyService(IOptions<OedSettings> settings, IHttpClientFactory httpClientFactory)
     {
         _httpClientFactory = httpClientFactory;
         _settings = settings.Value;
@@ -28,7 +28,7 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
             return response;
         }
 
-        if (!Regex.IsMatch(parts[0], _settings.ProxyHostEndpointMatch))
+        if (!Regex.IsMatch(parts[0], _settings.DaProxyHostEndpointMatch))
         {
             var response = incomingRequest.CreateResponse(HttpStatusCode.BadRequest);
             await response.WriteStringAsync("Invalid endpoint");
