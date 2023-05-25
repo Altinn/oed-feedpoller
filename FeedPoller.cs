@@ -24,7 +24,7 @@ public class FeedPoller
     [Function(nameof(FeedPoller))]
     public async Task RunAsync([TimerTrigger("*/5 * * * *")] TimerInfo timerInfo)
     {
-        _logger.LogDebug($"DA feed import executed at: {DateTime.Now}");
+        _logger.LogDebug("DA feed import executed at: {Now}", DateTime.Now);
 
         if (timerInfo.IsPastDue)
         {
@@ -43,21 +43,23 @@ public class FeedPoller
         }
         else
         {
-            _logger.LogError("Invalid configuration for OedEventsBaseUrl, should be an absolute url.");
+            _logger.LogError("Invalid configuration for OedEventsBaseUrl, should be an absolute url");
         }
 
-        _logger.LogInformation($"Next timer schedule at: {timerInfo.ScheduleStatus?.Next}");
+        _logger.LogInformation("Next timer schedule at: {Next}", timerInfo.ScheduleStatus?.Next);
     }
 
     private async Task PerformFeedPollAndUpdate()
     {
         HttpClient httpClient = _clientFactory.CreateClient(Constants.EventsHttpClient);
+        httpClient.DefaultRequestHeaders.Add("Content-Type", "application/json");
         string url = _oedSettings.OedEventsBaseUrl?.TrimEnd('/') + "/process";
         
         HttpResponseMessage result = await httpClient.PostAsync(url, null);
         if (!result.IsSuccessStatusCode)
         {
-            _logger.LogError($"Failed to poll feed from {url}, status code: {result.StatusCode}");
+            _logger.LogError("Failed to trigger processing of DA event feed - POST {Url}, status code: {StatusCode}. Message: {Message}", 
+                url, result.StatusCode, await result.Content.ReadAsStringAsync());
         }
     }
 }
