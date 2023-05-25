@@ -1,3 +1,4 @@
+using System.Net.Http.Headers;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
@@ -52,7 +53,7 @@ public class FeedPoller
     private async Task PerformFeedPollAndUpdate()
     {
         HttpClient httpClient = _clientFactory.CreateClient(Constants.EventsHttpClient);
-        httpClient.DefaultRequestHeaders.Add("Content-Type", "application/json");
+        httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         string url = _oedSettings.OedEventsBaseUrl?.TrimEnd('/') + "/process";
         
         HttpResponseMessage result = await httpClient.PostAsync(url, null);
