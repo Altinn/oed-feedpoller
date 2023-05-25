@@ -6,6 +6,8 @@
 
     "OedSettings:DaProxyHostEndpointMatch": "domstol.no$|brreg.no$",
     "OedSettings:OedEventsBaseUrl": "https://digdir.apps.tt02.altinn.no/digdir/oed-events/da-events/api/v1/",
+    
+    "MaskinportenSettings:Scope": "domstol:forvaltningssaker:doedsfall.read altinn:serviceowner/events altinn:dd:internal",
 
     // Default settings for running Redis locally
     "ConnectionStrings:Redis": "127.0.0.1:6379,allowAdmin=true,defaultDatabase=0"
