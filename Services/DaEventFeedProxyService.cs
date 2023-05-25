@@ -3,16 +3,22 @@ using System.Text.RegularExpressions;
 using Digdir.Oed.FeedPoller.Interfaces;
 using Digdir.Oed.FeedPoller.Settings;
 using Microsoft.Azure.Functions.Worker.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace Digdir.Oed.FeedPoller.Services;
 public class DaEventFeedProxyService : IDaEventFeedProxyService
 {
+    private readonly ILogger<DaEventFeedProxyService> _logger;
     private readonly IHttpClientFactory _httpClientFactory;
     private readonly OedSettings _settings;
 
-    public DaEventFeedProxyService(IOptions<OedSettings> settings, IHttpClientFactory httpClientFactory)
+    public DaEventFeedProxyService(
+        ILoggerFactory loggerFactory,
+        IOptions<OedSettings> settings, 
+        IHttpClientFactory httpClientFactory)
     {
+        _logger = loggerFactory.CreateLogger<DaEventFeedProxyService>();
         _httpClientFactory = httpClientFactory;
         _settings = settings.Value;
     }
@@ -51,12 +57,21 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
         var outgoingRequest = new HttpRequestMessage(HttpMethod.Get, url);
         outgoingRequest.Headers.Add("Accept", "application/json");
 
-        var incomingResponse = await client.SendAsync(outgoingRequest);
-        var outgoingResponse = incomingRequest.CreateResponse(incomingResponse.StatusCode);
-        outgoingResponse.Headers.Add("Content-Type", "application/json");
+        try
+        {
+            var incomingResponse = await client.SendAsync(outgoingRequest);
+            var outgoingResponse = incomingRequest.CreateResponse(incomingResponse.StatusCode);
+            outgoingResponse.Headers.Add("Content-Type", "application/json");
 
-        await (await incomingResponse.Content.ReadAsStreamAsync()).CopyToAsync(outgoingResponse.Body);
+            await (await incomingResponse.Content.ReadAsStreamAsync()).CopyToAsync(outgoingResponse.Body);
 
-        return outgoingResponse;
+            return outgoingResponse;
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Error proxying request");
+            Console.WriteLine(ex);
+            throw;
+        }
     }
 }
