@@ -55,6 +55,7 @@ var host = new HostBuilder()
             clientDefinition =>
             {
                 clientDefinition.ClientSettings.Scope = ScopesByPrefix("domstol", clientDefinition.ClientSettings.Scope);
+                clientDefinition.ClientSettings.OverwriteAuthorizationHeader = false;
             });
 
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.EventsHttpClient, context.Configuration.GetSection("MaskinportenSettings"),

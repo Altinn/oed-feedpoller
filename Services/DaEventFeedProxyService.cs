@@ -57,6 +57,11 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
         var outgoingRequest = new HttpRequestMessage(HttpMethod.Get, url);
         outgoingRequest.Headers.Add("Accept", "application/json");
 
+        if (incomingRequest.Headers.TryGetValues("Authorization", out var authHeaderValues))
+        {
+            outgoingRequest.Headers.Add("Authorization", authHeaderValues.ToArray());
+        }
+        
         try
         {
             var incomingResponse = await client.SendAsync(outgoingRequest);
