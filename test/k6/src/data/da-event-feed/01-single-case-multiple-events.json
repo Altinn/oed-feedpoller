@@ -1,0 +1,85 @@
+[
+  [
+    {
+      "specversion": "1.0",
+      "id": "c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d",
+      "source": "https://domstol.no",
+      "type": "DODSFALLSAK-STATUS_LAGT_TIL",
+      "datacontenttype": "application/json",
+      "time": "2023-06-30T11:12:02.630159439+02:00",
+      "data": {
+        "@id": "https://hendelsesliste.test.domstol.no/api/objects/c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d"
+      }
+    },
+    {
+      "specversion": "1.0",
+      "id": "c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d",
+      "source": "https://domstol.no",
+      "type": "PARTER_LAGT_TIL",
+      "datacontenttype": "application/json",
+      "time": "2023-06-30T11:12:02.630159439+02:00",
+      "data": {
+        "@id": "https://hendelsesliste.test.domstol.no/api/objects/c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d"
+      }
+    },
+    {
+      "specversion": "1.0",
+      "id": "c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d",
+      "source": "https://domstol.no",
+      "type": "RESULTATTYPE_LAGT_TIL",
+      "datacontenttype": "application/json",
+      "time": "2023-06-30T11:12:02.630159439+02:00",
+      "data": {
+        "@id": "https://hendelsesliste.test.domstol.no/api/objects/c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d"
+      }
+    }
+  ],
+  [
+    {
+      "specversion": "1.0",
+      "id": "c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d",
+      "source": "https://domstol.no",
+      "type": "PARTER_LAGT_TIL",
+      "datacontenttype": "application/json",
+      "time": "2023-06-30T11:27:11.997641013+02:00",
+      "data": {
+        "@id": "https://hendelsesliste.test.domstol.no/api/objects/c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d"
+      }
+    },
+    {
+      "specversion": "1.0",
+      "id": "c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d",
+      "source": "https://domstol.no",
+      "type": "PARTER_LAGT_TIL",
+      "datacontenttype": "application/json",
+      "time": "2023-06-30T11:27:11.997641013+02:00",
+      "data": {
+        "@id": "https://hendelsesliste.test.domstol.no/api/objects/c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d"
+      }
+    }
+  ],
+  [
+    {
+      "specversion": "1.0",
+      "id": "c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d",
+      "source": "https://domstol.no",
+      "type": "PARTER_LAGT_TIL",
+      "datacontenttype": "application/json",
+      "time": "2023-06-30T11:27:22.897760084+02:00",
+      "data": {
+        "@id": "https://hendelsesliste.test.domstol.no/api/objects/c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d"
+      }
+    },
+    {
+      "specversion": "1.0",
+      "id": "c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d",
+      "source": "https://domstol.no",
+      "type": "PARTER_LAGT_TIL",
+      "datacontenttype": "application/json",
+      "time": "2023-06-30T11:27:22.897760084+02:00",
+      "data": {
+        "@id": "https://hendelsesliste.test.domstol.no/api/objects/c38392c2-d5e8-4e24-a6a0-8ac9fbf5354d"
+      }
+    }
+  ]
+]
