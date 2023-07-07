@@ -10,13 +10,13 @@
     For use case tests omit environment variable runFullTestSet or set value to false
 */
 import { check } from "k6";
-import * as setupToken from "../../setup.js";
+import * as setupToken from "../setup.js";
 import * as eventsApi from "../api/events.js";
 import * as subscriptionsApi from "../api/subscriptions.js";
 import { uuidv4 } from "https://jslib.k6.io/k6-utils/1.4.0/index.js";
-const daEventFeed = JSON.parse(open("../../data/da-event-feed/01-single-case-multiple-events.json"));
-import { generateJUnitXML, reportPath } from "../../report.js";
-import { addErrorCount } from "../../errorhandler.js";
+const daEventFeed = JSON.parse(open("../data/da-event-feed/01-single-case-multiple-events.json"));
+import { generateJUnitXML, reportPath } from "../report.js";
+import { addErrorCount } from "../errorhandler.js";
 import { oedApis } from "../config.js";
 
 const scopes = "altinn:events.subscribe"
