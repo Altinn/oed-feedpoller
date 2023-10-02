@@ -1,2 +1,2 @@
 # oed-feedpoller
-Function app polling DA feed converting it to Altinn events for app consumption
+Function app polling DA feed and initiating processing in oed-events. Also includes a proxy service for local testing.
