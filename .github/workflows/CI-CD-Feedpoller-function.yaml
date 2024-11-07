@@ -1,0 +1,95 @@
+name: CI/CD feedpoller-func
+
+on:
+  push:
+    branches:
+      - main
+
+env:
+  DOTNET_VERSION: '6.0.x' # Global environment variables
+  TEST_FUNC_NAME: 'oed-test-feedpoller-func'
+  PROD_FUNC_NAME: 'oed-feedpoller-func'
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout Code
+      uses: actions/checkout@v3
+
+    - name: GitHub metadata
+      run: |
+          echo "$GITHUB_REPOSITORY on $GITHUB_REF_NAME by $GITHUB_ACTOR"
+
+    - name: Set up .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: ${{ env.DOTNET_VERSION }}
+
+    - name: Restore dependencies
+      run: dotnet restore
+
+    - name: Build
+      run: dotnet publish -c Release -o ./publish
+
+    - name: Run Tests
+      run: dotnet test --verbosity normal
+
+    - name: Upload Build Artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: published-artifacts
+        path: ./publish/
+
+  deploy-to-test:
+    name: Deploy to Test Environment
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: test
+
+    steps:
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: published-artifacts
+        path: ./publish/
+
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: deploy-to-function
+      with:
+        app-name: '${{ env.TEST_FUNC_NAME }}'
+        slot-name: 'Production'
+        package: "${{env.GITHUB_WORKSPACE}}/publish/"
+        publish-profile: ${{ secrets.PUBLISH_PROFILE }}
+
+  deploy-to-prod:
+    name: Deploy to Production Environment
+    needs: deploy-to-test
+    runs-on: ubuntu-latest
+    environment:
+      name: production
+
+    steps:
+    - name: Await Manual Approval
+      if: ${{ github.ref == 'refs/heads/main' }}
+      run: |
+        echo "Waiting for manual approval"
+        echo "::pause::"
+    - name: Download Build Artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: published-artifacts
+        path: ./publish/
+
+    - name: 'Run Azure Functions Action'
+      uses: Azure/functions-action@v1
+      id: deploy-to-function
+      with:
+        app-name: '${{ env.PROD_FUNC_NAME}}'
+        slot-name: 'Production'
+        package: "${{env.GITHUB_WORKSPACE}}/publish/"
+        publish-profile: ${{ secrets.PUBLISH_PROFILE }}
