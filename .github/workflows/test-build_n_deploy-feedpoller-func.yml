@@ -1,0 +1,47 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/azure/functions-action
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+
+name: Build and deploy feedpoller-func to test
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+env:
+  DOTNET_VERSION: '6.0.x' # set this to the dotnet version to use
+
+jobs:
+  build-and-deploy:
+    runs-on: windows-latest
+    environment: Test
+    steps:
+      - name: 'Checkout GitHub Action'
+        uses: actions/checkout@v4
+
+      - name: Skriv ut GitHub metadata
+        run: |
+          echo "Repo: $GITHUB_REPOSITORY"
+          echo "Branch: $GITHUB_REF_NAME"
+          echo "Commit SHA: $GITHUB_SHA"
+          echo "Actor: $GITHUB_ACTOR"
+          echo "Run #: $GITHUB_RUN_NUMBER"
+        
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+          include-prerelease: true
+      
+      - name: dotnet publish
+        run: dotnet publish -c Release -o "${{env.GITHUB_WORKSPACE}}\myapp"
+
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: deploy-to-function
+        with:
+          app-name: 'oed-test-feedpoller-func'
+          slot-name: 'Production'
+          package: "${{env.GITHUB_WORKSPACE}}\\myapp"
+          publish-profile: ${{ secrets.PUBLISH_PROFILE }}
