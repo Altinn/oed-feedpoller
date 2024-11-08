@@ -63,7 +63,7 @@ jobs:
       with:
         app-name: '${{ env.TEST_FUNC_NAME }}'
         slot-name: 'Production'
-        package: "${{env.GITHUB_WORKSPACE}}/publish/"
+        package: ./publish/
         publish-profile: ${{ secrets.PUBLISH_PROFILE }}
 
   deploy-to-prod:
@@ -91,5 +91,5 @@ jobs:
       with:
         app-name: '${{ env.PROD_FUNC_NAME}}'
         slot-name: 'Production'
-        package: "${{env.GITHUB_WORKSPACE}}/publish/"
+        package: ./publish/
         publish-profile: ${{ secrets.PUBLISH_PROFILE }}
