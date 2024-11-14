@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-
+  workflow_dispatch:
 env:
   DOTNET_VERSION: '6.0.x' # Global environment variables
   TEST_FUNC_NAME: 'oed-test-feedpoller-func'
