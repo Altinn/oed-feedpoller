@@ -32,7 +32,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet publish -c Release -o ./publish -r win-x64
+      run: dotnet publish -c Release -o ./publish -r win-x64 --no-self-contained
 
     - name: Run Tests
       run: dotnet test --verbosity normal
