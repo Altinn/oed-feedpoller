@@ -6,9 +6,10 @@ on:
       - main
   workflow_dispatch:
 env:
-  DOTNET_VERSION: '6.0.x' # Global environment variables
-  TEST_FUNC_NAME: 'oed-test-feedpoller-func'
-  PROD_FUNC_NAME: 'oed-feedpoller-func'
+  DOTNET_VERSION:                 '6.0.x' # Global environment variables
+  TEST_FUNC_NAME:                 'oed-test-feedpoller-func'
+  PROD_FUNC_NAME:                 'oed-feedpoller-func'
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: .\published
 
 jobs:
   build:
@@ -32,7 +33,7 @@ jobs:
       run: dotnet restore
 
     - name: Build
-      run: dotnet publish -c Release -o ./publish
+      run: dotnet publish -c Release -o "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
     - name: Run Tests
       run: dotnet test --verbosity normal
@@ -41,7 +42,7 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: published-artifacts
-        path: ./publish/
+        path: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
   deploy-to-test:
     name: Deploy to Test Environment
@@ -55,7 +56,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: published-artifacts
-        path: ./publish/
+        path: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
     - name: 'Deploy to Azure Functions (Test)'
       uses: Azure/functions-action@v1
@@ -63,7 +64,7 @@ jobs:
       with:
         app-name: '${{ env.TEST_FUNC_NAME }}'
         slot-name: 'Production'
-        package: ./publish/
+        package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
         publish-profile: ${{ secrets.PUBLISH_PROFILE }}
 
   deploy-to-prod:
@@ -83,7 +84,7 @@ jobs:
       uses: actions/download-artifact@v4
       with:
         name: published-artifacts
-        path: ./publish/
+        path: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
 
     - name: Deploy to Azure Functions (Prod)
       uses: Azure/functions-action@v1
@@ -91,5 +92,5 @@ jobs:
       with:
         app-name: '${{ env.PROD_FUNC_NAME}}'
         slot-name: 'Production'
-        package: ./publish/
+        package: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
         publish-profile: ${{ secrets.PUBLISH_PROFILE }}
