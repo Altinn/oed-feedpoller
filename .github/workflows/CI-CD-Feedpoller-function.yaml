@@ -17,7 +17,7 @@ jobs:
 
     steps:
     - name: Checkout Code
-      uses: actions/checkout@v3
+      uses: actions/checkout@v4
 
     - name: GitHub metadata
       run: |
@@ -38,7 +38,7 @@ jobs:
       run: dotnet test --verbosity normal
 
     - name: Upload Build Artifacts
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: published-artifacts
         path: ./publish/
@@ -52,7 +52,7 @@ jobs:
 
     steps:
     - name: Download Build Artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: published-artifacts
         path: ./publish/
@@ -80,7 +80,7 @@ jobs:
         echo "Waiting for manual approval"
         echo "::pause::"
     - name: Download Build Artifacts
-      uses: actions/download-artifact@v3
+      uses: actions/download-artifact@v4
       with:
         name: published-artifacts
         path: ./publish/
