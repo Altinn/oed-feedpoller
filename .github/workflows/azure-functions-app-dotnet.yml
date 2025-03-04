@@ -62,6 +62,6 @@ jobs:
       uses: Azure/functions-action@v1
       id: deploy-to-function-test
       with:
-        app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
+        app-name: 'oed-test-feedpoller-func'
         package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
         publish-profile: ${{ secrets.PUBLISH_PROFILE }} # Remove publish-profile to use Azure RBAC
