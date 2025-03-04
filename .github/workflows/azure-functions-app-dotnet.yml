@@ -75,6 +75,5 @@ jobs:
       id: deploy-to-function-test
       with:
         app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
-        slot-name: 'Production'
         package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
         publish-profile: ${{ secrets.PUBLISH_PROFILE }} # Remove publish-profile to use Azure RBAC
