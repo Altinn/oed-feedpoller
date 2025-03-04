@@ -78,29 +78,3 @@ jobs:
         slot-name: 'Production'
         package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
         publish-profile: ${{ secrets.PUBLISH_PROFILE }} # Remove publish-profile to use Azure RBAC
-        
-  deploy-to-prod:
-      name: Deploy to Production Environment
-      runs-on: windows-latest
-      needs: deploy-to-test
-      environment: production
-      steps:
-      - name: Await Manual Approval
-        if: github.ref == 'refs/heads/main'
-        run: Write-Output "Waiting for manual approval..."
-        shell: pwsh
-      
-      - name: Download Build Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: published-artifacts
-          path: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          
-      - name: 'Deploy to Azure Functions (Prod)'
-        uses: Azure/functions-action@v1
-        id: deploy-to-function-production
-        with:
-          app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
-          slot-name: 'Production'
-          package: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
-          publish-profile: ${{ secrets.PUBLISH_PROFILE }} # Remove publish-profile to use Azure RBAC
