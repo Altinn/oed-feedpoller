@@ -50,6 +50,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: published-artifacts
+          include-hidden-files: true
           path: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
 
   deploy-to-test:
