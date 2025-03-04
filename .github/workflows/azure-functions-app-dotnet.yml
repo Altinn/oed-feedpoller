@@ -79,6 +79,11 @@ jobs:
     needs: deploy-to-test
     environment: production
     steps:
+      - name: Await Manual Approval
+        if: github.ref == 'refs/heads/main'
+        run: Write-Output "Waiting for manual approval..."
+        shell: pwsh
+        
       - name: 'Download Build Artifacts'
         uses: actions/download-artifact@v4
         with:
