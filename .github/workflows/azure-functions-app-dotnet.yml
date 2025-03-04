@@ -20,37 +20,37 @@ name: Deploy DotNet project to Azure Function App
 
 on:
   push:
-    branches: ["main"]
+    branches: ['main']
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: "./published" # set this to the path to your function app project, defaults to the repository root
-  DOTNET_VERSION: "6.0.x" # set this to the dotnet version to use (e.g. '2.1.x', '3.1.x', '5.0.x')
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './published' # set this to the path to your function app project, defaults to the repository root
+  DOTNET_VERSION: '6.0.x' # set this to the dotnet version to use (e.g. '2.1.x', '3.1.x', '5.0.x')
 
 jobs:
   build:
     runs-on: windows-latest
     steps:
-      - name: "Checkout GitHub Action"
+      - name: 'Checkout GitHub Action'
         uses: actions/checkout@v4
 
-      - name: "Setup DotNet ${{ env.DOTNET_VERSION }} Environment"
+      - name: 'Setup DotNet ${{ env.DOTNET_VERSION }} Environment'
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
 
-      - name: "Resolve Project Dependencies Using Dotnet"
+      - name: 'Resolve Project Dependencies Using Dotnet'
         shell: pwsh # For Linux, use bash
         run: dotnet publish -c Release --property:OutputPath=${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
-      - name: "Run tests"
+      - name: 'Run tests'
         shell: pwsh # For Linux, use bash
         run: dotnet test --verbosity normal
 
-      - name: "Upload Build Artifacts"
+      - name: 'Upload Build Artifacts'
         uses: actions/upload-artifact@v4
         with:
           name: published-artifacts
-          path: "${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}"
+          path: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
 
   deploy-to-test:
     name: Deploy to Test Environment
@@ -58,16 +58,16 @@ jobs:
     needs: build
     environment: test
     steps:
-      - name: "Download Build Artifacts"
+      - name: 'Download Build Artifacts'
         uses: actions/download-artifact@v4
         with:
           name: published-artifacts
-          path: "./downloaded-app"
+          path: './downloaded-app'
 
-      - name: "Deploy to Azure Functions (Test)"
+      - name: 'Deploy to Azure Functions (Test)'
         uses: Azure/functions-action@v1
         id: deploy-to-function-test
         with:
-          app-name: "oed-test-feedpoller-func"
-          package: "./downloaded-app"
-          publish-profile: "${{ secrets.PUBLISH_PROFILE }}" # Remove publish-profile to use Azure RBAC
+          app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
+          package: './downloaded-app'
+          publish-profile: '${{ secrets.PUBLISH_PROFILE }}' # Remove publish-profile to use Azure RBAC
