@@ -33,24 +33,18 @@ jobs:
     - name: 'Checkout GitHub Action'
       uses: actions/checkout@v4
 
-    - name: Setup DotNet ${{ env.DOTNET_VERSION }} Environment
+    - name: 'Setup DotNet ${{ env.DOTNET_VERSION }} Environment'
       uses: actions/setup-dotnet@v4
       with:
         dotnet-version: ${{ env.DOTNET_VERSION }}
     
     - name: 'Resolve Project Dependencies Using Dotnet'
       shell: pwsh # For Linux, use bash
-      run: |
-        pushd '.'
-        dotnet build --configuration Release --property:OutputPath=${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
-        popd
+      run: dotnet build --configuration Release --property:OutputPath=${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
         
     - name: 'Run tests'
       shell: pwsh # For Linux, use bash
-      run: |
-        pushd '.'
-        dotnet test --verbosity normal
-        popd
+      run: dotnet test --verbosity normal
 
     - name: 'Upload Build Artifacts'
       uses: actions/upload-artifact@v4
@@ -58,13 +52,7 @@ jobs:
         name: published-artifacts
         path: '${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
 
-  deploy-to-test:
-    name: Deploy to Test Environment
-    runs-on: windows-latest
-    needs: build
-    environment: test
-    steps:
-    - name: Download Build Artifacts
+    - name: 'Download Build Artifacts'
       uses: actions/download-artifact@v4
       with:
         name: published-artifacts
