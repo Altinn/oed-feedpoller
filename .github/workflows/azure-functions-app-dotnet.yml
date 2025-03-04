@@ -76,7 +76,7 @@ jobs:
   deploy-to-production:
     name: Deploy to Production Environment
     runs-on: windows-latest
-    needs: build
+    needs: deploy-to-test
     environment: production
     steps:
       - name: 'Download Build Artifacts'
