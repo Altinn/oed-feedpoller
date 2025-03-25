@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text.Json;
 using System.Text.RegularExpressions;
 using Digdir.Oed.FeedPoller.Interfaces;
 using Digdir.Oed.FeedPoller.Settings;
@@ -57,6 +58,8 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
         var outgoingRequest = new HttpRequestMessage(HttpMethod.Get, url);
         outgoingRequest.Headers.Add("Accept", "application/json");
 
+        _logger.LogInformation("Proxying request to {Url} with {Headers}", url, JsonSerializer.Serialize(incomingRequest.Headers));
+
         if (incomingRequest.Headers.TryGetValues("Authorization", out var authHeaderValues))
         {
             outgoingRequest.Headers.Add("Authorization", authHeaderValues.ToArray());
@@ -65,6 +68,8 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
         try
         {
             var incomingResponse = await client.SendAsync(outgoingRequest);
+            _logger.LogInformation("Proxying request to {Url} with {BearerToken}", url, outgoingRequest.Headers!.Authorization);
+            _logger.LogInformation("Proxying response to {Url} with {BearerToken}", url, incomingResponse.RequestMessage!.Headers!.Authorization);
             var outgoingResponse = incomingRequest.CreateResponse(incomingResponse.StatusCode);
             outgoingResponse.Headers.Add("Content-Type", "application/json");
 
