@@ -10,7 +10,6 @@ using Digdir.Oed.FeedPoller;
 using Digdir.Oed.FeedPoller.Interfaces;
 using Digdir.Oed.FeedPoller.Services;
 using Digdir.Oed.FeedPoller.Settings;
-using System.Text.Json.Serialization;
 using System.Text.Json;
 
 var host = new HostBuilder()
@@ -54,14 +53,12 @@ var host = new HostBuilder()
         services.Configure<OedSettings>(context.Configuration.GetSection("OedSettings"));
 
         var mpSettings = context.Configuration.GetSection("MaskinportenSettings");
-        Console.WriteLine($"MaskinportenSettings: {JsonSerializer.Serialize(mpSettings)}");
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.DaHttpClient, mpSettings,
             clientDefinition =>
             {
                 clientDefinition.ClientSettings.Scope = ScopesByPrefix("domstol", clientDefinition.ClientSettings.Scope);
                 clientDefinition.ClientSettings.OverwriteAuthorizationHeader = false;
                 clientDefinition.ClientSettings.Resource = Environment.GetEnvironmentVariable("MaskinportenSettings:DaResource");
-                Console.WriteLine($"DaHttpClient resource: {clientDefinition.ClientSettings.Resource}");
             });
 
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.EventsHttpClient, mpSettings,
@@ -69,7 +66,6 @@ var host = new HostBuilder()
             {
                 clientDefinition.ClientSettings.Scope = ScopesByPrefix("altinn", clientDefinition.ClientSettings.Scope);
                 clientDefinition.ClientSettings.Resource = Environment.GetEnvironmentVariable("MaskinportenSettings:OedEventsResource");
-                Console.WriteLine($"EventsHttpClient resource: {clientDefinition.ClientSettings.Resource}");
             });
 
         // Use if Redis not available locally
