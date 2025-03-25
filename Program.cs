@@ -64,7 +64,7 @@ var host = new HostBuilder()
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.EventsHttpClient, mpSettings,
             clientDefinition =>
             {
-                clientDefinition.ClientSettings.Scope = ScopesByPrefix("altinn", clientDefinition.ClientSettings.Scope);
+                clientDefinition.ClientSettings.Scope = "altinn:dd:internalevents";
                 clientDefinition.ClientSettings.Resource = Environment.GetEnvironmentVariable("MaskinportenSettings:OedEventsResource");
             });
 
