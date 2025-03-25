@@ -56,12 +56,14 @@ var host = new HostBuilder()
             {
                 clientDefinition.ClientSettings.Scope = ScopesByPrefix("domstol", clientDefinition.ClientSettings.Scope);
                 clientDefinition.ClientSettings.OverwriteAuthorizationHeader = false;
+                clientDefinition.ClientSettings.Resource = Environment.GetEnvironmentVariable("MaskinportenSettings:DaResource");
             });
 
         services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.EventsHttpClient, context.Configuration.GetSection("MaskinportenSettings"),
             clientDefinition =>
             {
                 clientDefinition.ClientSettings.Scope = ScopesByPrefix("altinn", clientDefinition.ClientSettings.Scope);
+                clientDefinition.ClientSettings.Resource = Environment.GetEnvironmentVariable("MaskinportenSettings:OedEventsResource");
             });
 
         // Use if Redis not available locally
