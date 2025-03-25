@@ -59,6 +59,7 @@ public class FeedPoller
         HttpResponseMessage result = await httpClient.PostAsync(url, null);
         if (!result.IsSuccessStatusCode)
         {
+            _logger.LogError("Bearer token: {AuthToken}", result.RequestMessage!.Headers.Authorization);
             _logger.LogError("Failed to trigger processing of DA event feed - POST {Url}, status code: {StatusCode}. Message: {Message}", 
                 url, result.StatusCode, await result.Content.ReadAsStringAsync());
         }
