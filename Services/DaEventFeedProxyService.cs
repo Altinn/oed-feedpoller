@@ -74,7 +74,7 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
 
             if (!httpResponseMessage.IsSuccessStatusCode)
             {
-                _logger.LogError(LogEventCodes.ProxyCallFailed, "Failed to proxying request - POST {Url}, status code: {StatusCode}.",
+                _logger.LogError(LogEventCodes.ProxyCallFailed, "Failed to proxy request - POST {Url}, status code: {StatusCode}.",
                     url, httpResponseMessage.StatusCode);
             }
 
@@ -90,7 +90,7 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
         }
         catch (Exception ex)
         {
-            _logger.LogError(LogEventCodes.ProxyCallFailed, ex, "Error proxying request");
+            _logger.LogError(LogEventCodes.ProxyingCallFailed, ex, "Error proxying request");
             Console.WriteLine(ex);
             throw;
         }
