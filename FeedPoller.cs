@@ -3,6 +3,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Digdir.Oed.FeedPoller.Settings;
+using DigdirDigdir.Oed.FeedPoller.Constants;
 
 namespace Digdir.Oed.FeedPoller;
 
@@ -52,14 +53,14 @@ public class FeedPoller
 
     private async Task PerformFeedPollAndUpdate()
     {
-        HttpClient httpClient = _clientFactory.CreateClient(Constants.EventsHttpClient);
+        HttpClient httpClient = _clientFactory.CreateClient(ClientConstants.EventsHttpClient);
         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         string url = _oedSettings.OedEventsBaseUrl?.TrimEnd('/') + "/process";
         
         HttpResponseMessage result = await httpClient.PostAsync(url, null);
         if (!result.IsSuccessStatusCode)
         {
-            _logger.LogError("Failed to trigger processing of DA event feed - POST {Url}, status code: {StatusCode}. Message: {Message}", 
+            _logger.LogError( "Failed to trigger processing of DA event feed - POST {Url}, status code: {StatusCode}. Message: {Message}", 
                 url, result.StatusCode, await result.Content.ReadAsStringAsync());
         }
     }
