@@ -6,6 +6,7 @@ using Digdir.Oed.FeedPoller.Settings;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using DigdirDigdir.Oed.FeedPoller.Constants;
 
 namespace Digdir.Oed.FeedPoller.Services;
 public class DaEventFeedProxyService : IDaEventFeedProxyService
@@ -26,7 +27,7 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
 
     public async Task<HttpResponseData> ProxyRequest(HttpRequestData incomingRequest)
     {
-        var client = _httpClientFactory.CreateClient(Constants.DaHttpClient);
+        var client = _httpClientFactory.CreateClient(ClientConstants.DaHttpClient);
         var parts = incomingRequest.Url.AbsolutePath.Split('/', 2, StringSplitOptions.RemoveEmptyEntries);
         if (parts.Length == 0)
         {
@@ -64,22 +65,32 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
         {
             outgoingRequest.Headers.Add("Authorization", authHeaderValues.ToArray());
         }
-        
+
+        HttpResponseMessage httpResponseMessage;
+
         try
         {
-            var incomingResponse = await client.SendAsync(outgoingRequest);
+            httpResponseMessage = await client.SendAsync(outgoingRequest);
+
+            if (!httpResponseMessage.IsSuccessStatusCode)
+            {
+                _logger.LogError(LogEventCodes.ProxyCallFailed, "Failed to proxy request - POST {Url}, status code: {StatusCode}.",
+                    url, httpResponseMessage.StatusCode);
+            }
+
+            var incomingResponse = httpResponseMessage;
             _logger.LogInformation("Proxying request to {Url} with {BearerToken}", url, outgoingRequest.Headers!.Authorization);
             _logger.LogInformation("Proxying response to {Url} with {BearerToken}", url, incomingResponse.RequestMessage!.Headers!.Authorization);
             var outgoingResponse = incomingRequest.CreateResponse(incomingResponse.StatusCode);
             outgoingResponse.Headers.Add("Content-Type", "application/json");
 
-            await (await incomingResponse.Content.ReadAsStreamAsync()).CopyToAsync(outgoingResponse.Body);
+            await ( await incomingResponse.Content.ReadAsStreamAsync()).CopyToAsync(outgoingResponse.Body);
 
             return outgoingResponse;
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error proxying request");
+            _logger.LogError(LogEventCodes.ProxyingCallFailed, ex, "Error proxying request");
             Console.WriteLine(ex);
             throw;
         }

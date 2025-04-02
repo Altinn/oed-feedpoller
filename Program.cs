@@ -10,7 +10,7 @@ using Digdir.Oed.FeedPoller;
 using Digdir.Oed.FeedPoller.Interfaces;
 using Digdir.Oed.FeedPoller.Services;
 using Digdir.Oed.FeedPoller.Settings;
-using System.Text.Json;
+using DigdirDigdir.Oed.FeedPoller.Constants;
 
 var host = new HostBuilder()
     .ConfigureAppConfiguration((hostContext, config) =>
@@ -53,7 +53,7 @@ var host = new HostBuilder()
         services.Configure<OedSettings>(context.Configuration.GetSection("OedSettings"));
 
         var mpSettings = context.Configuration.GetSection("MaskinportenSettings");
-        services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.DaHttpClient, mpSettings,
+        services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(ClientConstants.DaHttpClient, mpSettings,
             clientDefinition =>
             {
                 clientDefinition.ClientSettings.Scope = ScopesByPrefix("domstol", clientDefinition.ClientSettings.Scope);
@@ -61,7 +61,7 @@ var host = new HostBuilder()
                 clientDefinition.ClientSettings.Resource = Environment.GetEnvironmentVariable("MaskinportenSettings:DaResource");
             });
 
-        services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(Constants.EventsHttpClient, mpSettings,
+        services.AddMaskinportenHttpClient<SettingsJwkClientDefinition>(ClientConstants.EventsHttpClient, mpSettings,
             clientDefinition =>
             {
                 clientDefinition.ClientSettings.Scope = "altinn:dd:internalevents";
