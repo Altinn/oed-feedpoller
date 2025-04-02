@@ -14,7 +14,7 @@
     <Product>Digdir Oed Feedpoller</Product>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Altinn.ApiClients.Maskinporten" Version="9.0.0" />
+    <PackageReference Include="Altinn.ApiClients.Maskinporten" Version="9.2.1" />
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.2.2">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
