@@ -26,29 +26,37 @@ public class FeedPoller
     [Function(nameof(FeedPoller))]
     public async Task RunAsync([TimerTrigger("*/5 * * * *")] TimerInfo timerInfo)
     {
-        _logger.LogDebug("DA feed import executed at: {Now}", DateTime.Now);
-
-        if (timerInfo.IsPastDue)
+        try
         {
-            _logger.LogWarning("DA feed import was not run on schedule");
-        }
+            _logger.LogDebug("DA feed import executed at: {Now}", DateTime.Now);
 
-        if (!Helpers.ShouldRunUpdate())
-        {
-            _logger.LogDebug("Skipping update outside of busy hours");
-            return;
-        }
+            if (timerInfo.IsPastDue)
+            {
+                _logger.LogWarning("DA feed import was not run on schedule");
+            }
 
-        if (Uri.IsWellFormedUriString(_oedSettings.OedEventsBaseUrl, UriKind.Absolute))
-        {
-            await PerformFeedPollAndUpdate();
-        }
-        else
-        {
-            _logger.LogError("Invalid configuration for OedEventsBaseUrl, should be an absolute url");
-        }
+            if (!Helpers.ShouldRunUpdate())
+            {
+                _logger.LogDebug("Skipping update outside of busy hours");
+                return;
+            }
 
-        _logger.LogInformation("Next timer schedule at: {Next}", timerInfo.ScheduleStatus?.Next);
+            if (Uri.IsWellFormedUriString(_oedSettings.OedEventsBaseUrl, UriKind.Absolute))
+            {
+                await PerformFeedPollAndUpdate();
+            }
+            else
+            {
+                _logger.LogError("Invalid configuration for OedEventsBaseUrl, should be an absolute url");
+            }
+
+            _logger.LogInformation("Next timer schedule at: {Next}", timerInfo.ScheduleStatus?.Next);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, $"Failed to run feedpoller.");
+            throw;
+        }
     }
 
     private async Task PerformFeedPollAndUpdate()
@@ -56,11 +64,11 @@ public class FeedPoller
         HttpClient httpClient = _clientFactory.CreateClient(ClientConstants.EventsHttpClient);
         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         string url = _oedSettings.OedEventsBaseUrl?.TrimEnd('/') + "/process";
-        
+
         HttpResponseMessage result = await httpClient.PostAsync(url, null);
         if (!result.IsSuccessStatusCode)
         {
-            _logger.LogError( "Failed to trigger processing of DA event feed - POST {Url}, status code: {StatusCode}. Message: {Message}", 
+            _logger.LogError("Failed to trigger processing of DA event feed - POST {Url}, status code: {StatusCode}. Message: {Message}",
                 url, result.StatusCode, await result.Content.ReadAsStringAsync());
         }
     }
