@@ -3,7 +3,7 @@ using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Digdir.Oed.FeedPoller.Settings;
-using DigdirDigdir.Oed.FeedPoller.Constants;
+using Digdir.Oed.FeedPoller.Constants;
 
 namespace Digdir.Oed.FeedPoller;
 
@@ -24,7 +24,7 @@ public class FeedPoller
     }
 
     [Function(nameof(FeedPoller))]
-    public async Task RunAsync([TimerTrigger("*/5 * * * *")] TimerInfo timerInfo)
+    public async Task RunAsync([TimerTrigger("*/5 * * * *")] TimerInfo timerInfo, CancellationToken ct)
     {
         try
         {
@@ -43,7 +43,7 @@ public class FeedPoller
 
             if (Uri.IsWellFormedUriString(_oedSettings.OedEventsBaseUrl, UriKind.Absolute))
             {
-                await PerformFeedPollAndUpdate();
+                await PerformFeedPollAndUpdate(ct);
             }
             else
             {
@@ -59,13 +59,13 @@ public class FeedPoller
         }
     }
 
-    private async Task PerformFeedPollAndUpdate()
+    private async Task PerformFeedPollAndUpdate(CancellationToken ct)
     {
         HttpClient httpClient = _clientFactory.CreateClient(ClientConstants.EventsHttpClient);
         httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
         string url = _oedSettings.OedEventsBaseUrl?.TrimEnd('/') + "/process";
 
-        HttpResponseMessage result = await httpClient.PostAsync(url, null);
+        HttpResponseMessage result = await httpClient.PostAsync(url, null, ct);
         if (!result.IsSuccessStatusCode)
         {
             _logger.LogError("Failed to trigger processing of DA event feed - POST {Url}, status code: {StatusCode}. Message: {Message}",

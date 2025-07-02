@@ -1,22 +1,12 @@
 {
   "version": "2.0",
-  "logging": {
-    "logLevel": {
-      "default": "Information",
-      "Function": "Information",
-      "Host.Aggregator": "Error",
-      "Host.Results": "Information",
-      "Function.FeedPoller.User": "Debug"
-    },
-    "applicationInsights": {
-      "samplingSettings": {
-        "isEnabled": false
-      }
-    }
-  },
+  "telemetryMode": "openTelemetry",
   "extensions": {
     "http": {
       "routePrefix": ""
+    },
+    "timers": {
+      "maxConcurrentTimerFunctions": 1
     }
   }
 }
