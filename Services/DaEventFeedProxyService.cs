@@ -6,7 +6,7 @@ using Digdir.Oed.FeedPoller.Settings;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
-using DigdirDigdir.Oed.FeedPoller.Constants;
+using Digdir.Oed.FeedPoller.Constants;
 
 namespace Digdir.Oed.FeedPoller.Services;
 public class DaEventFeedProxyService : IDaEventFeedProxyService

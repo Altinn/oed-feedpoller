@@ -1,4 +1,4 @@
-﻿namespace DigdirDigdir.Oed.FeedPoller.Constants;
+﻿namespace Digdir.Oed.FeedPoller.Constants;
 public static class ClientConstants
 {
     public const string DaHttpClient = "DaHttpClient";
