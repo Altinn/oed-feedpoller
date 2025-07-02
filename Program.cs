@@ -1,4 +1,5 @@
 using Azure.Monitor.OpenTelemetry.Exporter;
+using Azure.Monitor.OpenTelemetry.AspNetCore;
 using Microsoft.Azure.Functions.Worker.OpenTelemetry;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -28,7 +29,7 @@ var host = new HostBuilder()
 
         if (hostContext.HostingEnvironment.IsDevelopment())
         {
-            config.AddUserSecrets<FeedPoller>(optional: true);
+            config.AddUserSecrets<FeedPoller>(optional: false);
         }
     })
     .ConfigureFunctionsWorkerDefaults()
@@ -49,17 +50,10 @@ var host = new HostBuilder()
 
         // OpenTelemetry med Application Insights-export
         services.AddOpenTelemetry()
-            .UseFunctionsWorkerDefaults()
             .ConfigureResource(r => r.AddService("oed-feedpoller"))
-            .WithTracing(tb => tb
-                .AddHttpClientInstrumentation()
-                .AddSource("Microsoft.Azure.Functions.Worker")
-                .AddAzureMonitorTraceExporter(o =>
-                    o.ConnectionString = config["APPLICATIONINSIGHTS_CONNECTION_STRING"]))
-            .WithMetrics(mb => mb
-                .AddHttpClientInstrumentation()
-                .AddAzureMonitorMetricExporter(o =>
-                    o.ConnectionString = config["APPLICATIONINSIGHTS_CONNECTION_STRING"]));
+            .UseAzureMonitor()
+            .UseFunctionsWorkerDefaults();
+
         services.Configure<OpenTelemetryLoggerOptions>(logging =>
         {            
             logging.IncludeFormattedMessage = true;
