@@ -38,11 +38,11 @@ var host = new HostBuilder()
     })
     .ConfigureFunctionsWorkerDefaults(builder =>
     {
-        builder
-            // Using preview package Microsoft.Azure.Functions.Worker.ApplicationInsights, see https://github.com/Azure/azure-functions-dotnet-worker/pull/944
-            // Requires APPLICATIONINSIGHTS_CONNECTION_STRING being set. Note that host.json logging settings will have to be replicated to worker.json
-            .AddApplicationInsights()
-            .AddApplicationInsightsLogger();
+        //builder
+        //    // Using preview package Microsoft.Azure.Functions.Worker.ApplicationInsights, see https://github.com/Azure/azure-functions-dotnet-worker/pull/944
+        //    // Requires APPLICATIONINSIGHTS_CONNECTION_STRING being set. Note that host.json logging settings will have to be replicated to worker.json
+        //    .AddApplicationInsights()
+        //    .AddApplicationInsightsLogger();
 
     }, options =>
     {
@@ -50,6 +50,9 @@ var host = new HostBuilder()
     })
     .ConfigureServices((context, services) =>
     {
+        services.AddApplicationInsightsTelemetryWorkerService();
+        services.ConfigureFunctionsApplicationInsights();
+
         services.Configure<OedSettings>(context.Configuration.GetSection("OedSettings"));
 
         var mpSettings = context.Configuration.GetSection("MaskinportenSettings");
