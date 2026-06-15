@@ -4,4 +4,5 @@ public class OedSettings
 {
     public string DaProxyHostEndpointMatch { get; set; } = string.Empty;
     public string OedEventsBaseUrl { get; set; } = string.Empty;
+    public string OedEventsFregBaseUrl { get; set; } = string.Empty;
 }
