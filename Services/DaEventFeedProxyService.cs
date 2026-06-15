@@ -38,7 +38,7 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
                 return response;
             }
 
-            if (!Regex.IsMatch(parts[0], _settings.DaProxyHostEndpointMatch))
+            if (!Regex.IsMatch(parts[0], _settings.DaProxyHostEndpointMatch, RegexOptions.None, TimeSpan.FromSeconds(1)))
             {
                 var response = incomingRequest.CreateResponse(HttpStatusCode.BadRequest);
                 await response.WriteStringAsync("Invalid endpoint");
@@ -47,7 +47,7 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
 
             var url = "https:/" + incomingRequest.Url.AbsolutePath;
             var query = incomingRequest.Url.Query;
-            var codeParamMatch = Regex.Match(incomingRequest.Url.Query, @"([\?&]code=[^&]*)");
+            var codeParamMatch = Regex.Match(incomingRequest.Url.Query, @"([\?&]code=[^&]*)", RegexOptions.None, TimeSpan.FromSeconds(1));
             if (codeParamMatch.Success)
             {
                 query = query.Replace(codeParamMatch.Groups[1].Value, string.Empty);
@@ -93,7 +93,7 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
         {
             _logger.LogError(LogEventCodes.ProxyingCallFailed, ex, "Error proxying request");
             Console.WriteLine(ex);
-            throw;
+            return incomingRequest.CreateResponse(HttpStatusCode.InternalServerError);
         }
     }
 }

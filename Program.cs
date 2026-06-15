@@ -36,18 +36,6 @@ var host = new HostBuilder()
             });
         }
     })
-    .ConfigureFunctionsWorkerDefaults(builder =>
-    {
-        //builder
-        //    // Using preview package Microsoft.Azure.Functions.Worker.ApplicationInsights, see https://github.com/Azure/azure-functions-dotnet-worker/pull/944
-        //    // Requires APPLICATIONINSIGHTS_CONNECTION_STRING being set. Note that host.json logging settings will have to be replicated to worker.json
-        //    .AddApplicationInsights()
-        //    .AddApplicationInsightsLogger();
-
-    }, options =>
-    {
-        //options.Serializer = new NewtonsoftJsonObjectSerializer();
-    })
     .ConfigureServices((context, services) =>
     {
         services.AddApplicationInsightsTelemetryWorkerService();
@@ -71,18 +59,16 @@ var host = new HostBuilder()
                 clientDefinition.ClientSettings.Resource = Environment.GetEnvironmentVariable("MaskinportenSettings:OedEventsResource");
             });
 
-        // Use if Redis not available locally
-        //services.AddDistributedMemoryCache();
         services.AddStackExchangeRedisCache(option =>
         {
             option.Configuration = context.Configuration.GetConnectionString("Redis");
         });
-        
+
         services.AddSingleton<IDaEventFeedProxyService, DaEventFeedProxyService>();
     })
     .Build();
 
-host.Run();
+await host.RunAsync();
 
 string ScopesByPrefix(string prefix, string scopes)
 {

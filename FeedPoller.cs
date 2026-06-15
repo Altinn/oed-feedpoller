@@ -55,7 +55,6 @@ public class FeedPoller
         catch (Exception ex)
         {
             _logger.LogError(ex, $"Failed to run feedpoller.");
-            throw;
         }
     }
 
