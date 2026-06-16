@@ -23,7 +23,7 @@ public static class Helpers
             return false;
         }
 
-        // At 0400-0559 and 1759-0100 update every half hour. This assumes this is ran at most every 5 minutes.
+        // Remaining hours (0000-0059, 0500-0559 and 1800-2359): update every half hour. This assumes this is ran at most every 5 minutes.
         if (norwegianTime.Minute is >= 58 or <= 2 or >= 28 and <= 32)
         {
             return true;
