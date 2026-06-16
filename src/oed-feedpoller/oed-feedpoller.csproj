@@ -53,11 +53,4 @@
   <ItemGroup>
     <Using Include="System.Threading.ExecutionContext" Alias="ExecutionContext" />
   </ItemGroup>
-  <!-- This csproj lives at the repo root, so the SDK's default **/*.cs Compile glob would
-       otherwise pull in test/ — exclude it. The test project under test/ compiles itself
-       via its own csproj. -->
-  <ItemGroup>
-    <Compile Remove="test/**/*.cs" />
-    <None Remove="test/**" />
-  </ItemGroup>
 </Project>

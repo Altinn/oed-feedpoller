@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="src/oed-feedpoller/oed-feedpoller.csproj" />
+  <Project Path="tests/oed-feedpoller.QaTests/oed-feedpoller.QaTests.csproj" />
+  <Project Path="tests/oed-feedpoller.UnitTests/oed-feedpoller.UnitTests.csproj" />
+</Solution>

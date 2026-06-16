@@ -40,7 +40,9 @@ jobs:
 
       - name: "Resolve Project Dependencies Using Dotnet"
         shell: pwsh # For Linux, use bash
-        run: dotnet publish -c Release --property:OutputPath=${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
+        # OutputPath is project-relative, and the app now lives under src/, so anchor the
+        # output at the workspace root to keep it at ./published (matching the steps below).
+        run: dotnet publish src/oed-feedpoller/oed-feedpoller.csproj -c Release --property:OutputPath=${{ github.workspace }}/published
 
       - name: "Run tests"
         shell: pwsh # For Linux, use bash
