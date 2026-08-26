@@ -68,7 +68,7 @@ jobs:
           path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
       - name: "Deploy to Azure Functions (Test)"
-        uses: Azure/functions-action@v1
+        uses: Azure/functions-action@c5060b3b8bb1ebbcb531abd00c822ecbaa8ea656 # v1
         id: deploy-to-function-test
         with:
           app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
@@ -93,7 +93,7 @@ jobs:
           path: ${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}
 
       - name: "Deploy to Azure Functions (Production)"
-        uses: Azure/functions-action@v1
+        uses: Azure/functions-action@c5060b3b8bb1ebbcb531abd00c822ecbaa8ea656 # v1
         id: deploy-to-function-production
         with:
           app-name: ${{ vars.AZURE_FUNCTIONAPP_NAME }}
