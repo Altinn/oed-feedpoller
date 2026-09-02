@@ -34,12 +34,6 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.1">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
-    <!-- Security override: Altinn.ApiClients.Maskinporten 9.2.1 pulls the IdentityModel family in
-         transitively at 7.0.2, which carries a known moderate-severity DoS advisory
-         (GHSA-59j7-ghrg-fj52, fixed in 7.1.2). Pin to the latest patched 7.x to clear NU1902.
-         Drop these once Maskinporten references a patched IdentityModel itself. -->
-    <PackageReference Include="Microsoft.IdentityModel.JsonWebTokens" Version="7.7.1" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="7.7.1" />
   </ItemGroup>
   <ItemGroup>
     <None Update="host.json">
