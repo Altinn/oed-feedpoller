@@ -61,7 +61,10 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
             var outgoingRequest = new HttpRequestMessage(HttpMethod.Get, url);
             outgoingRequest.Headers.Add("Accept", "application/json");
 
-            _logger.LogInformation("Proxying request to {Url} with {Headers}", url, JsonSerializer.Serialize(incomingRequest.Headers));
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Proxying request to {Url} with {Headers}", url, JsonSerializer.Serialize(incomingRequest.Headers));
+            }
 
             if (incomingRequest.Headers.TryGetValues("Authorization", out var authHeaderValues))
             {
@@ -80,8 +83,11 @@ public class DaEventFeedProxyService : IDaEventFeedProxyService
             }
 
             var incomingResponse = httpResponseMessage;
-            _logger.LogInformation("Proxying request to {Url} with {BearerToken}", url, outgoingRequest.Headers!.Authorization);
-            _logger.LogInformation("Proxying response to {Url} with {BearerToken}", url, incomingResponse.RequestMessage!.Headers!.Authorization);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Proxying request to {Url} with {BearerToken}", url, outgoingRequest.Headers!.Authorization);
+                _logger.LogInformation("Proxying response to {Url} with {BearerToken}", url, incomingResponse.RequestMessage!.Headers!.Authorization);
+            }
             var outgoingResponse = incomingRequest.CreateResponse(incomingResponse.StatusCode);
             outgoingResponse.Headers.Add("Content-Type", "application/json");
 

@@ -28,7 +28,10 @@ public class FeedPoller
     {
         try
         {
-            _logger.LogDebug("DA feed import executed at: {Now}", DateTime.Now);
+            if (_logger.IsEnabled(LogLevel.Debug))
+            {
+                _logger.LogDebug("DA feed import executed at: {Now}", DateTime.Now);
+            }
 
             if (timerInfo.IsPastDue)
             {
@@ -50,7 +53,10 @@ public class FeedPoller
                 _logger.LogError("Invalid configuration for OedEventsBaseUrl, should be an absolute url");
             }
 
-            _logger.LogInformation("Next timer schedule at: {Next}", timerInfo.ScheduleStatus?.Next);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Next timer schedule at: {Next}", timerInfo.ScheduleStatus?.Next);
+            }
         }
         catch (Exception ex)
         {

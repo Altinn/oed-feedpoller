@@ -48,7 +48,10 @@ public class FregFeedPoller
                 _logger.LogError("Invalid configuration for OedEventsFregBaseUrl, should be an absolute url");
             }
 
-            _logger.LogInformation("Next FREG timer schedule at: {Next}", timerInfo.ScheduleStatus?.Next);
+            if (_logger.IsEnabled(LogLevel.Information))
+            {
+                _logger.LogInformation("Next FREG timer schedule at: {Next}", timerInfo.ScheduleStatus?.Next);
+            }
         }
         catch (Exception ex)
         {
