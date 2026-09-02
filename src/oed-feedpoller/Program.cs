@@ -24,7 +24,7 @@ var host = new HostBuilder()
             config.AddUserSecrets<FeedPoller>(false);
         }
     })
-    // TODO Workaround for https://github.com/Azure/azure-functions-dotnet-worker/issues/1090
+    // Workaround for https://github.com/Azure/azure-functions-dotnet-worker/issues/1090
     .ConfigureLogging(loggingBuilder =>
     {
         if (Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development")
