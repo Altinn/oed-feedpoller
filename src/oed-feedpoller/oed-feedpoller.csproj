@@ -30,8 +30,8 @@
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.14.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.11" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.11">
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.12" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.12">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
   </ItemGroup>
