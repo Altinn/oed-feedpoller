@@ -14,7 +14,7 @@
     <Product>Digdir Oed Feedpoller</Product>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Altinn.ApiClients.Maskinporten" Version="10.1.0" />
+    <PackageReference Include="Altinn.ApiClients.Maskinporten" Version="10.2.0" />
     <PackageReference Include="Azure.Extensions.AspNetCore.Configuration.Secrets" Version="1.5.2">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
@@ -30,8 +30,8 @@
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Azure" Version="1.14.1" />
-    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.12" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.12">
+    <PackageReference Include="Microsoft.Extensions.Caching.StackExchangeRedis" Version="10.0.14" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.UserSecrets" Version="10.0.14">
       <TreatAsUsed>true</TreatAsUsed>
     </PackageReference>
   </ItemGroup>
