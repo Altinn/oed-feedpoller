@@ -374,17 +374,6 @@
           "Microsoft.Extensions.Primitives": "10.0.14"
         }
       },
-      "Microsoft.Extensions.Caching.StackExchangeRedis": {
-        "type": "Transitive",
-        "resolved": "10.0.14",
-        "contentHash": "pd+40ZOZQ63O01wkPFLx2ODVILiPQ0AoQCz0YbQrH7y88z3ahaT1Vq3oOKnLrH7VeIYgH/C+X1R4MPkU3kpckQ==",
-        "dependencies": {
-          "Microsoft.Extensions.Caching.Abstractions": "10.0.14",
-          "Microsoft.Extensions.Logging.Abstractions": "10.0.14",
-          "Microsoft.Extensions.Options": "10.0.14",
-          "StackExchange.Redis": "2.7.27"
-        }
-      },
       "Microsoft.Extensions.Configuration": {
         "type": "Transitive",
         "resolved": "10.0.14",
@@ -752,20 +741,6 @@
         "resolved": "6.0.0",
         "contentHash": "hqTM5628jSsQiv+HGpiq3WKBl2c8v1KZfby2J6Pr7pEPlK9waPdgEO6b8A/+/xn/yZ9ulv8HuqK71ONy2tg67A=="
       },
-      "Pipelines.Sockets.Unofficial": {
-        "type": "Transitive",
-        "resolved": "2.2.8",
-        "contentHash": "zG2FApP5zxSx6OcdJQLbZDk2AVlN2BNQD6MorwIfV6gVj0RRxWPEp2LXAxqDGZqeNV1Zp0BNPcNaey/GXmTdvQ=="
-      },
-      "StackExchange.Redis": {
-        "type": "Transitive",
-        "resolved": "2.7.27",
-        "contentHash": "Uqc2OQHglqj9/FfGQ6RkKFkZfHySfZlfmbCl+hc+u2I/IqunfelQ7QJi7ZhvAJxUtu80pildVX6NPLdDaUffOw==",
-        "dependencies": {
-          "Microsoft.Extensions.Logging.Abstractions": "6.0.0",
-          "Pipelines.Sockets.Unofficial": "2.2.8"
-        }
-      },
       "System.ClientModel": {
         "type": "Transitive",
         "resolved": "1.15.0",
@@ -907,7 +882,6 @@
           "Microsoft.Azure.Functions.Worker.Extensions.Timer": "[4.3.1, )",
           "Microsoft.Azure.Functions.Worker.Sdk": "[2.1.0, )",
           "Microsoft.Extensions.Azure": "[1.14.1, )",
-          "Microsoft.Extensions.Caching.StackExchangeRedis": "[10.0.14, )",
           "Microsoft.Extensions.Configuration.UserSecrets": "[10.0.14, )"
         }
       }
