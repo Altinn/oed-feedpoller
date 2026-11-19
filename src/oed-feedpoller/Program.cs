@@ -61,11 +61,6 @@ var host = new HostBuilder()
                 clientDefinition.ClientSettings.Resource = Environment.GetEnvironmentVariable("MaskinportenSettings:OedEventsResource");
             });
 
-        services.AddStackExchangeRedisCache(option =>
-        {
-            option.Configuration = context.Configuration.GetConnectionString("Redis");
-        });
-
         services.AddSingleton<IDaEventFeedProxyService, DaEventFeedProxyService>();
     })
     .Build();
