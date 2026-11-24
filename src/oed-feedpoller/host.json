@@ -10,7 +10,8 @@
       "Function": "Information",
       "Host.Aggregator": "Error",
       "Host.Results": "Information",
-      "Function.FeedPoller.User": "Debug"
+      "Function.FeedPoller.User": "Debug",
+      "Azure.Core": "Error"
     },
     "applicationInsights": {
       "samplingSettings": {
