@@ -1,0 +1,16 @@
+<Project>
+
+  <!-- Azure.Functions.Sdk generates and restores the Functions extensions project in a
+       post-restore hook that only runs when the function project itself is restored.
+       A solution restore (dotnet restore, dotnet test) does not reach it, and the build then
+       falls back to restoring during build with warning AZFW0108. This target walks the
+       project references after a solution restore and runs the hook, as documented in
+       https://learn.microsoft.com/azure/azure-functions/errors-diagnostics/msbuild-sdk-rules/azfw0108 -->
+  <Target Name="_RecursiveGenerateFunctionsExtensionProject" AfterTargets="Restore">
+    <MSBuild Projects="@(ProjectReference)" Targets="_RecursiveGenerateFunctionsExtensionProject"
+      SkipNonexistentProjects="true" SkipNonexistentTargets="true" />
+    <MSBuild Projects="@(ProjectReference)" Targets="GenerateFunctionsExtensionProject"
+      SkipNonexistentProjects="true" SkipNonexistentTargets="true" />
+  </Target>
+
+</Project>
